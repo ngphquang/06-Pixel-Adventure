@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,14 +7,24 @@ public class Player_Controller : MonoBehaviour
 {
     [Header("Movement")] [SerializeField] private float PlayerSpeed = 1f;
     [SerializeField] private float PlayerJumpForce = 1f;
-    [SerializeField] private int JumpableTimes = 2;
+    [SerializeField] private float WallSlideFriction = 0.5f;
+    private bool CanDoubleJump;
     private Rigidbody2D PlayerRigidBody;
     private PlayerInput PlayerInput;
     private Animator PlayerAnimator;
     private Vector2 MoveInput;
-    private int JumpAmount;
+
+    [Header("Wall Jump Interactions")] [SerializeField]
+    private Vector2 WallJumpForce;
+
+    [Header("Knock Back")] [SerializeField]
+    private float KnockBackDelayTimer = 1f;
+    [SerializeField] private Vector2 KnockBackForce;
+    private bool IsKnockedBack;
+    private bool CanBeKnockBack = true;
 
     [Header("Collision")] [SerializeField] private float GroundCheckDistance;
+    [SerializeField] private float WallCheckingDistance;
     [SerializeField] private LayerMask GroundLayer;
 
     void Start()
@@ -22,18 +33,26 @@ public class Player_Controller : MonoBehaviour
         PlayerRigidBody = GetComponent<Rigidbody2D>();
         PlayerInput = GetComponent<PlayerInput>();
         PlayerInput.actions.Enable();
-        JumpAmount = JumpableTimes;
     }
 
     void FixedUpdate()
     {
+        if (IsKnockedBack) { return; }
+
         IsRunning();
         IsGrounded();
+        IsWallDetected();
         PlayerRun();
+        PlayerWallSlide();
         FlipSprite();
         AnimationManager();
         AirborneManager();
         LandingManager();
+    }
+
+    void OnAttack()
+    {
+        PlayerKnockBack();
     }
 
     bool IsRunning()
@@ -46,11 +65,17 @@ public class Player_Controller : MonoBehaviour
         return Physics2D.Raycast(transform.position, Vector2.down, GroundCheckDistance, GroundLayer);
     }
 
+    bool IsWallDetected()
+    {
+        return Physics2D.Raycast(transform.position, Vector2.right * Mathf.Sign(transform.localScale.x),
+            WallCheckingDistance, GroundLayer);
+    }
+
     void LandingManager()
     {
         if (!IsGrounded()) { return; }
 
-        JumpAmount = JumpableTimes;
+        CanDoubleJump = true;
     }
 
     void AirborneManager()
@@ -68,24 +93,59 @@ public class Player_Controller : MonoBehaviour
         MoveInput = inputValue.Get<Vector2>();
     }
 
-    void OnJump()
+    void PlayerRun()
     {
-        if (IsGrounded()) { PlayerRigidBody.linearVelocityY += PlayerJumpForce; }
-        else if (CanJumpManyTimes())
+        if (IsWallDetected()) return;
+        PlayerRigidBody.linearVelocityX = MoveInput.x * PlayerSpeed;
+    }
+
+    void PlayerKnockBack()
+    {
+        if (IsKnockedBack) return;
+        StartCoroutine(KnockBackCoroutine());
+        PlayerAnimator.SetTrigger("KnockBack");
+        PlayerRigidBody.linearVelocity =
+            new Vector2(KnockBackForce.x * Mathf.Sign(transform.localScale.x) * -1, KnockBackForce.y);
+        StopCoroutine(KnockBackCoroutine());
+    }
+
+    IEnumerator KnockBackCoroutine()
+    {
+        CanBeKnockBack = false;
+        IsKnockedBack = true;
+        yield return new WaitForSeconds(KnockBackDelayTimer);
+        CanBeKnockBack = true;
+        IsKnockedBack = false;
+    }
+
+    void PlayerWallSlide()
+    {
+        float LocalWallSlideFriction = MoveInput.y < 0 ? WallSlideFriction * 2f : WallSlideFriction;
+
+        if (IsWallDetected() && PlayerRigidBody.linearVelocityY < 0)
         {
-            PlayerRigidBody.linearVelocityY += PlayerJumpForce;
-            JumpAmount--;
+            PlayerRigidBody.linearVelocityY *= LocalWallSlideFriction;
+            // CanDoubleJump = false;
         }
     }
 
-    bool CanJumpManyTimes()
+    void OnJump()
     {
-        return JumpAmount > 1;
+        if (IsKnockedBack) { return; }
+        else if (IsGrounded()) { PlayerRigidBody.linearVelocityY = PlayerJumpForce; }
+        else if (IsWallDetected() && !IsGrounded()) { PlayerWallJump(); }
+        else if (CanDoubleJump)
+        {
+            PlayerRigidBody.linearVelocityY = PlayerJumpForce;
+            CanDoubleJump = false;
+        }
     }
 
-    void PlayerRun()
+    private void PlayerWallJump()
     {
-        PlayerRigidBody.linearVelocityX = MoveInput.x * PlayerSpeed;
+        CanDoubleJump = true;
+        PlayerRigidBody.linearVelocity =
+            new Vector2(WallJumpForce.x * Mathf.Sign(transform.localScale.x) * -1, WallJumpForce.y);
     }
 
     void AnimationManager()
@@ -93,5 +153,14 @@ public class Player_Controller : MonoBehaviour
         PlayerAnimator.SetFloat("VelocityX", Mathf.Abs(PlayerRigidBody.linearVelocityX));
         PlayerAnimator.SetFloat("VelocityY", PlayerRigidBody.linearVelocityY);
         PlayerAnimator.SetBool("IsGrounded", IsGrounded());
+        PlayerAnimator.SetBool("IsWallDetected", IsWallDetected());
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(transform.position,
+            new Vector2(transform.position.x, transform.position.y - GroundCheckDistance));
+        Gizmos.DrawLine(transform.position,
+            new Vector2(transform.position.x + WallCheckingDistance, transform.position.y));
     }
 }

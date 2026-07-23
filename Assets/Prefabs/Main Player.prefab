@@ -78,8 +78,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -2016528645
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -6367560908665664636, guid: 3750f45c844123341b9a777a96cb1eca, type: 3}
@@ -167,7 +167,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 5
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 917895749ec016145b452eb7f5dadd22, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -212,7 +212,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.05, y: 0}
   m_Size: {x: 1.2, y: 1.5}
   m_Direction: 0
 --- !u!114 &8912262145394345832
@@ -258,9 +258,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player_Controller
   PlayerSpeed: 7
-  PlayerJumpForce: 15
-  JumpableTimes: 2
-  GroundCheckDistance: 1
+  PlayerJumpForce: 20
+  WallSlideFriction: 0.5
+  WallJumpForce: {x: 100, y: 15}
+  KnockBackDelayTimer: 0.7
+  KnockBackForce: {x: 5, y: 10}
+  GroundCheckDistance: 0.85
+  WallCheckingDistance: 0.85
   GroundLayer:
     serializedVersion: 2
     m_Bits: 8
