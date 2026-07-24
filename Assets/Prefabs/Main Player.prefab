@@ -176,7 +176,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!70 &1950432334940364364
 CapsuleCollider2D:
@@ -260,6 +260,8 @@ MonoBehaviour:
   PlayerSpeed: 7
   PlayerJumpForce: 20
   WallSlideFriction: 0.5
+  BufferJumpWindow: 0.1
+  CoyoteJumpWindow: 0.1
   WallJumpForce: {x: 100, y: 15}
   KnockBackDelayTimer: 0.7
   KnockBackForce: {x: 5, y: 10}

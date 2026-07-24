@@ -8,11 +8,18 @@ public class Player_Controller : MonoBehaviour
     [Header("Movement")] [SerializeField] private float PlayerSpeed = 1f;
     [SerializeField] private float PlayerJumpForce = 1f;
     [SerializeField] private float WallSlideFriction = 0.5f;
+    private bool JustJumped;
     private bool CanDoubleJump;
     private Rigidbody2D PlayerRigidBody;
     private PlayerInput PlayerInput;
     private Animator PlayerAnimator;
     private Vector2 MoveInput;
+
+    [Header("Buffer & Coyote Jump")] [SerializeField]
+    private float BufferJumpWindow = 0.25f;
+    private float BufferJumpActivated = -1f;
+    [SerializeField] private float CoyoteJumpWindow = 0.5f;
+    private float CoyoteJumpActivated = -1f;
 
     [Header("Wall Jump Interactions")] [SerializeField]
     private Vector2 WallJumpForce;
@@ -21,13 +28,12 @@ public class Player_Controller : MonoBehaviour
     private float KnockBackDelayTimer = 1f;
     [SerializeField] private Vector2 KnockBackForce;
     private bool IsKnockedBack;
-    private bool CanBeKnockBack = true;
 
     [Header("Collision")] [SerializeField] private float GroundCheckDistance;
     [SerializeField] private float WallCheckingDistance;
     [SerializeField] private LayerMask GroundLayer;
 
-    void Start()
+    private void Start()
     {
         PlayerAnimator = GetComponentInChildren<Animator>();
         PlayerRigidBody = GetComponent<Rigidbody2D>();
@@ -35,7 +41,7 @@ public class Player_Controller : MonoBehaviour
         PlayerInput.actions.Enable();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (IsKnockedBack) { return; }
 
@@ -46,62 +52,66 @@ public class Player_Controller : MonoBehaviour
         PlayerWallSlide();
         FlipSprite();
         AnimationManager();
-        AirborneManager();
         LandingManager();
+        AirborneManager();
     }
 
-    void OnAttack()
-    {
-        PlayerKnockBack();
-    }
-
-    bool IsRunning()
+    private bool IsRunning()
     {
         return Mathf.Abs(MoveInput.x) > Mathf.Epsilon;
     }
 
-    bool IsGrounded()
+    private bool IsGrounded()
     {
         return Physics2D.Raycast(transform.position, Vector2.down, GroundCheckDistance, GroundLayer);
     }
 
-    bool IsWallDetected()
+    private bool IsWallDetected()
     {
         return Physics2D.Raycast(transform.position, Vector2.right * Mathf.Sign(transform.localScale.x),
             WallCheckingDistance, GroundLayer);
     }
 
-    void LandingManager()
+    private void LandingManager()
     {
         if (!IsGrounded()) { return; }
 
-        CanDoubleJump = true;
+        AttemptBufferJump();
+        if (PlayerRigidBody.linearVelocityY == 0)
+        {
+            CanDoubleJump = true;
+            JustJumped = false;
+        }
     }
 
-    void AirborneManager()
+    private void AirborneManager()
     {
-        if (IsGrounded()) { return; }
+        if (IsGrounded() || IsWallDetected()) { return; }
+
+        else if (PlayerRigidBody.linearVelocityY < 0 && !JustJumped) { RequestCoyoteJump(); }
     }
 
-    void FlipSprite()
+    private void FlipSprite()
     {
         if (IsRunning()) { transform.localScale = new Vector2(Mathf.Sign(MoveInput.x), transform.localScale.y); }
     }
 
-    void OnMove(InputValue inputValue)
+    private void OnMove(InputValue inputValue)
     {
         MoveInput = inputValue.Get<Vector2>();
     }
 
-    void PlayerRun()
+    private void PlayerRun()
     {
-        if (IsWallDetected()) return;
+        if (IsWallDetected()) { return; }
+
         PlayerRigidBody.linearVelocityX = MoveInput.x * PlayerSpeed;
     }
 
-    void PlayerKnockBack()
+    private void PlayerKnockBack()
     {
-        if (IsKnockedBack) return;
+        if (IsKnockedBack) { return; }
+
         StartCoroutine(KnockBackCoroutine());
         PlayerAnimator.SetTrigger("KnockBack");
         PlayerRigidBody.linearVelocity =
@@ -109,36 +119,45 @@ public class Player_Controller : MonoBehaviour
         StopCoroutine(KnockBackCoroutine());
     }
 
-    IEnumerator KnockBackCoroutine()
+    private IEnumerator KnockBackCoroutine()
     {
-        CanBeKnockBack = false;
         IsKnockedBack = true;
         yield return new WaitForSeconds(KnockBackDelayTimer);
-        CanBeKnockBack = true;
         IsKnockedBack = false;
     }
 
-    void PlayerWallSlide()
+    private void PlayerWallSlide()
     {
-        float LocalWallSlideFriction = MoveInput.y < 0 ? WallSlideFriction * 2f : WallSlideFriction;
+        var FastWallSlideFriction = MoveInput.y < 0 ? WallSlideFriction * 2f : WallSlideFriction;
 
         if (IsWallDetected() && PlayerRigidBody.linearVelocityY < 0)
         {
-            PlayerRigidBody.linearVelocityY *= LocalWallSlideFriction;
+            PlayerRigidBody.linearVelocityY *= FastWallSlideFriction;
             // CanDoubleJump = false;
         }
     }
 
-    void OnJump()
+    private void OnJump()
     {
         if (IsKnockedBack) { return; }
-        else if (IsGrounded()) { PlayerRigidBody.linearVelocityY = PlayerJumpForce; }
+
+        var CanCoyoteJump = Time.time < (CoyoteJumpActivated + CoyoteJumpWindow);
+        if (IsGrounded() || CanCoyoteJump) { PlayerJump(); }
+        else if (!IsGrounded() && !IsWallDetected() && !CanDoubleJump) { RequestBufferJump(); }
         else if (IsWallDetected() && !IsGrounded()) { PlayerWallJump(); }
         else if (CanDoubleJump)
         {
-            PlayerRigidBody.linearVelocityY = PlayerJumpForce;
+            PlayerJump();
             CanDoubleJump = false;
         }
+
+        CancelCoyoteJump();
+        JustJumped = true;
+    }
+
+    private void PlayerJump()
+    {
+        PlayerRigidBody.linearVelocityY = PlayerJumpForce;
     }
 
     private void PlayerWallJump()
@@ -148,7 +167,30 @@ public class Player_Controller : MonoBehaviour
             new Vector2(WallJumpForce.x * Mathf.Sign(transform.localScale.x) * -1, WallJumpForce.y);
     }
 
-    void AnimationManager()
+    private void RequestBufferJump()
+    {
+        BufferJumpActivated = Time.time;
+    }
+
+    private void AttemptBufferJump()
+    {
+        if (!(Time.time < (BufferJumpActivated + BufferJumpWindow))) { return; }
+
+        BufferJumpActivated = Time.time - 1f;
+        PlayerJump();
+    }
+
+    private void RequestCoyoteJump()
+    {
+        CoyoteJumpActivated = Time.time;
+    }
+
+    private void CancelCoyoteJump()
+    {
+        CoyoteJumpActivated = Time.time - 1f;
+    }
+
+    private void AnimationManager()
     {
         PlayerAnimator.SetFloat("VelocityX", Mathf.Abs(PlayerRigidBody.linearVelocityX));
         PlayerAnimator.SetFloat("VelocityY", PlayerRigidBody.linearVelocityY);
