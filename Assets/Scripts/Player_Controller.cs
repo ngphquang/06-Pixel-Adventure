@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,7 +9,7 @@ public class Player_Controller : MonoBehaviour
     [Header("Movement")] [SerializeField] private float PlayerSpeed = 1f;
     [SerializeField] private float PlayerJumpForce = 1f;
     [SerializeField] private float WallSlideFriction = 0.5f;
-    private bool JustJumped;
+    private bool HasJumped;
     private bool CanDoubleJump;
     private Rigidbody2D PlayerRigidBody;
     private PlayerInput PlayerInput;
@@ -17,9 +18,9 @@ public class Player_Controller : MonoBehaviour
 
     [Header("Buffer & Coyote Jump")] [SerializeField]
     private float BufferJumpWindow = 0.25f;
-    private float BufferJumpActivated = -1f;
+    private float BufferJumpActivatedMoment = -1f;
     [SerializeField] private float CoyoteJumpWindow = 0.5f;
-    private float CoyoteJumpActivated = -1f;
+    private float CoyoteJumpActivatedMoment = -1f;
 
     [Header("Wall Jump Interactions")] [SerializeField]
     private Vector2 WallJumpForce;
@@ -33,7 +34,7 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private float WallCheckingDistance;
     [SerializeField] private LayerMask GroundLayer;
 
-    private void Start()
+    private void Awake()
     {
         PlayerAnimator = GetComponentInChildren<Animator>();
         PlayerRigidBody = GetComponent<Rigidbody2D>();
@@ -76,24 +77,23 @@ public class Player_Controller : MonoBehaviour
     {
         if (!IsGrounded()) { return; }
 
+        CanDoubleJump = true;
         AttemptBufferJump();
-        if (PlayerRigidBody.linearVelocityY == 0)
-        {
-            CanDoubleJump = true;
-            JustJumped = false;
-        }
+        if (PlayerRigidBody.linearVelocityY == 0) { HasJumped = false; }
     }
 
     private void AirborneManager()
     {
         if (IsGrounded() || IsWallDetected()) { return; }
 
-        else if (PlayerRigidBody.linearVelocityY < 0 && !JustJumped) { RequestCoyoteJump(); }
+        if (PlayerRigidBody.linearVelocityY < 0 && !HasJumped) { RequestCoyoteJump(); }
     }
 
     private void FlipSprite()
     {
-        if (IsRunning()) { transform.localScale = new Vector2(Mathf.Sign(MoveInput.x), transform.localScale.y); }
+        if (!IsRunning()) { return; }
+
+        transform.localScale = new Vector2(Mathf.Sign(MoveInput.x), transform.localScale.y);
     }
 
     private void OnMove(InputValue inputValue)
@@ -108,7 +108,7 @@ public class Player_Controller : MonoBehaviour
         PlayerRigidBody.linearVelocityX = MoveInput.x * PlayerSpeed;
     }
 
-    private void PlayerKnockBack()
+    public void PlayerKnockBack()
     {
         if (IsKnockedBack) { return; }
 
@@ -141,8 +141,11 @@ public class Player_Controller : MonoBehaviour
     {
         if (IsKnockedBack) { return; }
 
-        var CanCoyoteJump = Time.time < (CoyoteJumpActivated + CoyoteJumpWindow);
-        if (IsGrounded() || CanCoyoteJump) { PlayerJump(); }
+        if (IsGrounded() || CanCoyoteJump())
+        {
+            PlayerJump();
+            CancelCoyoteJump();
+        }
         else if (!IsGrounded() && !IsWallDetected() && !CanDoubleJump) { RequestBufferJump(); }
         else if (IsWallDetected() && !IsGrounded()) { PlayerWallJump(); }
         else if (CanDoubleJump)
@@ -151,8 +154,7 @@ public class Player_Controller : MonoBehaviour
             CanDoubleJump = false;
         }
 
-        CancelCoyoteJump();
-        JustJumped = true;
+        HasJumped = true;
     }
 
     private void PlayerJump()
@@ -163,31 +165,37 @@ public class Player_Controller : MonoBehaviour
     private void PlayerWallJump()
     {
         CanDoubleJump = true;
-        PlayerRigidBody.linearVelocity =
-            new Vector2(WallJumpForce.x * Mathf.Sign(transform.localScale.x) * -1, WallJumpForce.y);
+        transform.localScale = new Vector2(transform.localScale.x * -1, transform.localScale.y);
+        var jumpForce = new Vector2(WallJumpForce.x * Mathf.Sign(transform.localScale.x), WallJumpForce.y);
+        PlayerRigidBody.AddRelativeForce(jumpForce);
     }
 
     private void RequestBufferJump()
     {
-        BufferJumpActivated = Time.time;
+        BufferJumpActivatedMoment = Time.time;
     }
 
     private void AttemptBufferJump()
     {
-        if (!(Time.time < (BufferJumpActivated + BufferJumpWindow))) { return; }
+        if (!(Time.time <= (BufferJumpActivatedMoment + BufferJumpWindow))) { return; }
 
-        BufferJumpActivated = Time.time - 1f;
         PlayerJump();
+        BufferJumpActivatedMoment = Time.time - 1f;
     }
 
     private void RequestCoyoteJump()
     {
-        CoyoteJumpActivated = Time.time;
+        CoyoteJumpActivatedMoment = Time.time;
     }
 
     private void CancelCoyoteJump()
     {
-        CoyoteJumpActivated = Time.time - 1f;
+        CoyoteJumpActivatedMoment = Time.time - 1f;
+    }
+
+    private bool CanCoyoteJump()
+    {
+        return Time.time < (CoyoteJumpActivatedMoment + CoyoteJumpWindow);
     }
 
     private void AnimationManager()
