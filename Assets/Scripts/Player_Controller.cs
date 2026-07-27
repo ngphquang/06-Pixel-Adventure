@@ -11,10 +11,15 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private float WallSlideFriction = 0.5f;
     private bool HasJumped;
     private bool CanDoubleJump;
+    private CapsuleCollider2D PlayerCollider;
+    private Player_Controller PlayerInstance;
     private Rigidbody2D PlayerRigidBody;
     private PlayerInput PlayerInput;
     private Animator PlayerAnimator;
     private Vector2 MoveInput;
+    private bool IsDead;
+    private bool CanBeControl;
+    private float DefaultGravityScale = 1f;
 
     [Header("Buffer & Coyote Jump")] [SerializeField]
     private float BufferJumpWindow = 0.25f;
@@ -34,17 +39,34 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private float WallCheckingDistance;
     [SerializeField] private LayerMask GroundLayer;
 
+    [Header("VFX")] [SerializeField] private GameObject DeadVFX;
+
     private void Awake()
     {
+        CheckSingleton();
         PlayerAnimator = GetComponentInChildren<Animator>();
+        PlayerCollider = GetComponent<CapsuleCollider2D>();
         PlayerRigidBody = GetComponent<Rigidbody2D>();
         PlayerInput = GetComponent<PlayerInput>();
         PlayerInput.actions.Enable();
     }
 
+    void CheckSingleton()
+    {
+        if (PlayerInstance == null) PlayerInstance = this;
+        else Destroy(gameObject);
+    }
+
+    private void Start()
+    {
+        IsDead = false;
+        DefaultGravityScale = PlayerRigidBody.gravityScale;
+        CanControlPLayer(false);
+    }
+
     private void FixedUpdate()
     {
-        if (IsKnockedBack) { return; }
+        if (IsKnockedBack || IsDead || !CanBeControl) { return; }
 
         IsRunning();
         IsGrounded();
@@ -55,6 +77,22 @@ public class Player_Controller : MonoBehaviour
         AnimationManager();
         LandingManager();
         AirborneManager();
+    }
+
+    public void CanControlPLayer(bool controllable)
+    {
+        if (controllable)
+        {
+            PlayerRigidBody.gravityScale = DefaultGravityScale;
+            PlayerCollider.enabled = true;
+            CanBeControl = true;
+        }
+        else
+        {
+            PlayerRigidBody.gravityScale = 0f;
+            PlayerCollider.enabled = false;
+            CanBeControl = false;
+        }
     }
 
     private bool IsRunning()
@@ -113,7 +151,7 @@ public class Player_Controller : MonoBehaviour
         if (IsKnockedBack) { return; }
 
         StartCoroutine(KnockBackCoroutine());
-        PlayerAnimator.SetTrigger("KnockBack");
+        PlayerAnimator.SetTrigger("IsKnockBack");
         PlayerRigidBody.linearVelocity =
             new Vector2(KnockBackForce.x * Mathf.Sign(transform.localScale.x) * -1, KnockBackForce.y);
         StopCoroutine(KnockBackCoroutine());
@@ -124,6 +162,13 @@ public class Player_Controller : MonoBehaviour
         IsKnockedBack = true;
         yield return new WaitForSeconds(KnockBackDelayTimer);
         IsKnockedBack = false;
+    }
+
+    public void PlayerDie()
+    {
+        Destroy(gameObject);
+        IsDead = true;
+        GameObject deadVFX = Instantiate(this.DeadVFX, transform.position, Quaternion.identity);
     }
 
     private void PlayerWallSlide()

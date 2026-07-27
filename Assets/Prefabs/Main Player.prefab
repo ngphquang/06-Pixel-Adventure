@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5114887216639522267}
   - component: {fileID: 129924287371178957}
   - component: {fileID: 8017105231645821029}
+  - component: {fileID: 2301752598421654813}
   m_Layer: 0
   m_Name: Animator
   m_TagString: Untagged
@@ -115,6 +116,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2301752598421654813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2747017934203863725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95391cdb511a1424d8f878f0823051f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player_Controllable_Event
 --- !u!1 &8583305332279867960
 GameObject:
   m_ObjectHideFlags: 0
@@ -270,3 +283,4 @@ MonoBehaviour:
   GroundLayer:
     serializedVersion: 2
     m_Bits: 8
+  DeadVFX: {fileID: 8331947832284536541, guid: 49d7bae7bad81c84dad1feb280b75fa3, type: 3}
