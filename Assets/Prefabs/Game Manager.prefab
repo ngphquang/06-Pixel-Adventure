@@ -49,3 +49,4 @@ MonoBehaviour:
   RespawnPoint: {fileID: 0}
   RespawnDelay: 1
   RandomFruits: 1
+  CheckpointsCanBeReactivated: 0

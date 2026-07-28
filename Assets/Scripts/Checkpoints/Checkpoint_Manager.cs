@@ -7,8 +7,10 @@ public class Checkpoint_Manager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (IsActive && !Game_Manager.GameManagerInstance.CheckpointsCanBeReactivated) return;
+
         var Player = other.GetComponent<Player_Controller>();
-        if (Player == null || IsActive) return;
+        if (Player == null) return;
         CheckpointAnimator = GetComponent<Animator>();
         ActivateCheckpoint();
     }
@@ -16,7 +18,6 @@ public class Checkpoint_Manager : MonoBehaviour
     void ActivateCheckpoint()
     {
         IsActive = true;
-        print("Active");
         CheckpointAnimator.SetTrigger("IsActive");
         Game_Manager.GameManagerInstance.UpdateRespawnCheckpoint(gameObject.transform);
     }

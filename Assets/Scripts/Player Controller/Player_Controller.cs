@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -31,7 +30,7 @@ public class Player_Controller : MonoBehaviour
     private Vector2 WallJumpForce;
 
     [Header("Knock Back")] [SerializeField]
-    private float KnockBackDelayTimer = 1f;
+    private float KnockBackDuration = 1f;
     [SerializeField] private Vector2 KnockBackForce;
     private bool IsKnockedBack;
 
@@ -146,29 +145,34 @@ public class Player_Controller : MonoBehaviour
         PlayerRigidBody.linearVelocityX = MoveInput.x * PlayerSpeed;
     }
 
-    public void PlayerKnockBack()
+    public void PlayerKnockBack(Transform damagePosition)
     {
-        if (IsKnockedBack) { return; }
+        if (IsKnockedBack) return;
+
+        var FacingDirection = 1f;
+        if (transform.position.x < damagePosition.position.x) FacingDirection = -1f;
 
         StartCoroutine(KnockBackCoroutine());
-        PlayerAnimator.SetTrigger("IsKnockBack");
-        PlayerRigidBody.linearVelocity =
-            new Vector2(KnockBackForce.x * Mathf.Sign(transform.localScale.x) * -1, KnockBackForce.y);
+        PlayerRigidBody.linearVelocity = new Vector2(KnockBackForce.x * FacingDirection, KnockBackForce.y);
         StopCoroutine(KnockBackCoroutine());
     }
 
     private IEnumerator KnockBackCoroutine()
     {
         IsKnockedBack = true;
-        yield return new WaitForSeconds(KnockBackDelayTimer);
+        PlayerAnimator.SetBool("IsKnockBack", IsKnockedBack);
+
+        yield return new WaitForSeconds(KnockBackDuration);
+
         IsKnockedBack = false;
+        PlayerAnimator.SetBool("IsKnockBack", IsKnockedBack);
     }
 
     public void PlayerDie()
     {
-        Destroy(gameObject);
         IsDead = true;
-        GameObject deadVFX = Instantiate(this.DeadVFX, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+        Instantiate(DeadVFX, transform.position, Quaternion.identity);
     }
 
     private void PlayerWallSlide()

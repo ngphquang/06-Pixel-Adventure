@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Destroy_Event : MonoBehaviour
 {
-    void Destroy()
+    private void Destroy()
     {
         Destroy(gameObject);
     }

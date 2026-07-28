@@ -12,6 +12,10 @@ public class Game_Manager : MonoBehaviour
 
     [Header("Fruits")] [SerializeField] private bool RandomFruits = true;
     private int FruitsCollected;
+    private int TotalFruitsAmount;
+
+    [Header("Checkpoints")] [SerializeField]
+    public bool CheckpointsCanBeReactivated;
 
     private void Awake()
     {
@@ -19,9 +23,31 @@ public class Game_Manager : MonoBehaviour
         else Destroy(gameObject);
     }
 
+    private void Start()
+    {
+        CollectFruitsInfo();
+    }
+
+    private void CollectFruitsInfo()
+    {
+        Fruit_Manager[] AllFruitsOnThisLevel = FindObjectsByType<Fruit_Manager>();
+        TotalFruitsAmount = AllFruitsOnThisLevel.Length;
+        print("Total fruits amount: " + TotalFruitsAmount);
+    }
+
     public void AddFruits()
     {
         FruitsCollected++;
+    }
+
+    public int GetFruitsCollected()
+    {
+        return FruitsCollected;
+    }
+
+    public bool GetRandomFruits()
+    {
+        return RandomFruits;
     }
 
     public void RespawnPlayer()
@@ -40,15 +66,5 @@ public class Game_Manager : MonoBehaviour
     public void UpdateRespawnCheckpoint(Transform checkpoint)
     {
         RespawnPoint = checkpoint;
-    }
-
-    public int GetFruitsCollected()
-    {
-        return FruitsCollected;
-    }
-
-    public bool GetRandomFruits()
-    {
-        return RandomFruits;
     }
 }
