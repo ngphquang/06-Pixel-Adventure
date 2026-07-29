@@ -53,11 +53,11 @@ TagManager:
   - name: Enemies
     uniqueID: 1741333357
     locked: 0
-  - name: Player
-    uniqueID: 2278438651
-    locked: 0
   - name: Items
     uniqueID: 292634511
+    locked: 0
+  - name: Player
+    uniqueID: 2278438651
     locked: 0
   m_RenderingLayers:
   - Default

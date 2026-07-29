@@ -50,3 +50,5 @@ MonoBehaviour:
   RespawnDelay: 1
   RandomFruits: 1
   CheckpointsCanBeReactivated: 0
+  ArrowPrefab: {fileID: 2130086877024827921, guid: 9cf2a43ab2c4e0b4381d9061ba300100, type: 3}
+  PlatformPrefab: {fileID: 8943834720236577012, guid: de3a9fac518cf0744a3140bb57883e03, type: 3}

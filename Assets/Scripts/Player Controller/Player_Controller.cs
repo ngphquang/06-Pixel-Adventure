@@ -168,6 +168,21 @@ public class Player_Controller : MonoBehaviour
         PlayerAnimator.SetBool("IsKnockBack", IsKnockedBack);
     }
 
+    public void PushPlayer(Vector2 force, float duration)
+    {
+        StartCoroutine(PushPlayerCoroutine(force, duration));
+    }
+
+    private IEnumerator PushPlayerCoroutine(Vector2 force, float duration)
+    {
+        CanBeControl = false;
+        PlayerRigidBody.linearVelocity = Vector2.zero;
+        PlayerRigidBody.AddForce(force, ForceMode2D.Impulse);
+
+        yield return new WaitForSeconds(duration);
+        CanBeControl = true;
+    }
+
     public void PlayerDie()
     {
         IsDead = true;

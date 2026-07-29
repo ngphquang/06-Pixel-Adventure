@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 
 public class Game_Manager : MonoBehaviour
@@ -16,6 +17,9 @@ public class Game_Manager : MonoBehaviour
 
     [Header("Checkpoints")] [SerializeField]
     public bool CheckpointsCanBeReactivated;
+
+    [Header("Traps")] [SerializeField] public GameObject ArrowPrefab;
+    [SerializeField] public GameObject PlatformPrefab;
 
     private void Awake()
     {
@@ -66,5 +70,17 @@ public class Game_Manager : MonoBehaviour
     public void UpdateRespawnCheckpoint(Transform checkpoint)
     {
         RespawnPoint = checkpoint;
+    }
+
+    public void CreateObject(GameObject prefab, Transform target, float delay = 0)
+    {
+        StartCoroutine(CreateObjectCoroutine(prefab, target, delay));
+    }
+
+    private static IEnumerator CreateObjectCoroutine(GameObject prefab, Transform target, float delay)
+    {
+        var position = target.position;
+        yield return new WaitForSeconds(delay);
+        if (!prefab.Equals(null)) Instantiate(prefab, position, Quaternion.identity);
     }
 }
