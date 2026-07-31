@@ -112,8 +112,8 @@ public class Falling_Platform_Manager : MonoBehaviour
     {
         if (ImpactTimer < 0) return;
         ImpactTimer -= Time.deltaTime;
-        transform.position = Vector2.MoveTowards(transform.position, transform.position + Vector3.down * 10,
-            ImpactSpeed * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position,
+            transform.position + Vector3.down * 10, ImpactSpeed * Time.deltaTime);
     }
 
     private void InstantiatePlatform()
