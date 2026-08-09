@@ -35,7 +35,7 @@ public class Player_Controller : MonoBehaviour
     private bool IsKnockedBack;
 
     [Header("Collision")] [SerializeField] private float GroundCheckDistance;
-    [SerializeField] private float WallCheckingDistance;
+    [SerializeField] private float WallCheckDistance;
     [SerializeField] private LayerMask GroundLayer;
 
     [Header("VFX")] [SerializeField] private GameObject DeadVFX;
@@ -68,7 +68,7 @@ public class Player_Controller : MonoBehaviour
         if (IsKnockedBack || IsDead || !CanBeControl) { return; }
 
         IsRunning();
-        IsGrounded();
+        IsGroundDetected();
         IsWallDetected();
         PlayerRun();
         PlayerWallSlide();
@@ -99,7 +99,7 @@ public class Player_Controller : MonoBehaviour
         return Mathf.Abs(MoveInput.x) > Mathf.Epsilon;
     }
 
-    private bool IsGrounded()
+    private bool IsGroundDetected()
     {
         return Physics2D.Raycast(transform.position, Vector2.down, GroundCheckDistance, GroundLayer);
     }
@@ -107,12 +107,12 @@ public class Player_Controller : MonoBehaviour
     private bool IsWallDetected()
     {
         return Physics2D.Raycast(transform.position, Vector2.right * Mathf.Sign(transform.localScale.x),
-            WallCheckingDistance, GroundLayer);
+            WallCheckDistance, GroundLayer);
     }
 
     private void LandingManager()
     {
-        if (!IsGrounded()) { return; }
+        if (!IsGroundDetected()) { return; }
 
         CanDoubleJump = true;
         AttemptBufferJump();
@@ -121,7 +121,7 @@ public class Player_Controller : MonoBehaviour
 
     private void AirborneManager()
     {
-        if (IsGrounded() || IsWallDetected()) { return; }
+        if (IsGroundDetected() || IsWallDetected()) { return; }
 
         if (PlayerRigidBody.linearVelocityY < 0 && !HasJumped) { RequestCoyoteJump(); }
     }
@@ -205,13 +205,13 @@ public class Player_Controller : MonoBehaviour
     {
         if (IsKnockedBack) { return; }
 
-        if (IsGrounded() || CanCoyoteJump())
+        if (IsGroundDetected() || CanCoyoteJump())
         {
             PlayerJump();
             CancelCoyoteJump();
         }
-        else if (!IsGrounded() && !IsWallDetected() && !CanDoubleJump) { RequestBufferJump(); }
-        else if (IsWallDetected() && !IsGrounded()) { PlayerWallJump(); }
+        else if (!IsGroundDetected() && !IsWallDetected() && !CanDoubleJump) { RequestBufferJump(); }
+        else if (IsWallDetected() && !IsGroundDetected()) { PlayerWallJump(); }
         else if (CanDoubleJump)
         {
             PlayerJump();
@@ -266,7 +266,7 @@ public class Player_Controller : MonoBehaviour
     {
         PlayerAnimator.SetFloat("VelocityX", Mathf.Abs(PlayerRigidBody.linearVelocityX));
         PlayerAnimator.SetFloat("VelocityY", PlayerRigidBody.linearVelocityY);
-        PlayerAnimator.SetBool("IsGrounded", IsGrounded());
+        PlayerAnimator.SetBool("IsGrounded", IsGroundDetected());
         PlayerAnimator.SetBool("IsWallDetected", IsWallDetected());
     }
 
@@ -275,6 +275,6 @@ public class Player_Controller : MonoBehaviour
         Gizmos.DrawLine(transform.position,
             new Vector2(transform.position.x, transform.position.y - GroundCheckDistance));
         Gizmos.DrawLine(transform.position,
-            new Vector2(transform.position.x + WallCheckingDistance, transform.position.y));
+            new Vector2(transform.position.x + WallCheckDistance, transform.position.y));
     }
 }
