@@ -2,8 +2,17 @@ using UnityEngine;
 
 public class Mushroom_Manager : Enemies_Manager
 {
+    private BoxCollider2D EnemiesCollider;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        EnemiesCollider = GetComponent<BoxCollider2D>();
+    }
+
     protected override void Update()
     {
+        if (IsDead) return;
         base.Update();
         HandleAnimation();
         CollisionCheck();
@@ -30,5 +39,11 @@ public class Mushroom_Manager : Enemies_Manager
         if (IdleTimer > 0 || !IsGroundDetected) { return; }
 
         EnemiesRigidBody.linearVelocityX = MoveSpeed * FacingDirection;
+    }
+
+    public override void EnemiesDie()
+    {
+        base.EnemiesDie();
+        EnemiesCollider.enabled = false;
     }
 }

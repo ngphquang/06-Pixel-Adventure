@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Enemies_Manager : MonoBehaviour
@@ -17,6 +18,13 @@ public class Enemies_Manager : MonoBehaviour
     protected bool IsGroundInFrontDetected;
     protected bool IsWallDetected;
     private bool FacingRight;
+
+    [Header("Death")] [SerializeField] private float DeathImpactForce;
+    [SerializeField] private float DeathTorque;
+    [SerializeField] private float DeathGravity;
+    [SerializeField] private float DestroyTime;
+    [SerializeField] private GameObject EnemiesDamageArea;
+    protected bool IsDead;
 
     protected virtual void Awake()
     {
@@ -49,6 +57,24 @@ public class Enemies_Manager : MonoBehaviour
         FacingDirection *= -1;
         transform.localScale = new Vector2(transform.localScale.x * -1, transform.localScale.y);
         FacingRight = !FacingRight;
+    }
+
+    public virtual void EnemiesDie()
+    {
+        IsDead = true;
+        Destroy(EnemiesDamageArea);
+        EnemiesAnimator.SetTrigger("IsHit");
+        EnemiesRigidBody.AddForce(new Vector2(0, DeathImpactForce));
+        EnemiesRigidBody.freezeRotation = false;
+        EnemiesRigidBody.AddTorque(DeathTorque);
+        EnemiesRigidBody.gravityScale = DeathGravity;
+        StartCoroutine(DestroyEnemies());
+    }
+
+    IEnumerator DestroyEnemies()
+    {
+        yield return new WaitForSeconds(DestroyTime);
+        Destroy(gameObject);
     }
 
     private void OnDrawGizmos()

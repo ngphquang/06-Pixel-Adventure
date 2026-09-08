@@ -170,5 +170,5 @@ MonoBehaviour:
   RotationSpeed: 120
   RotateRight: 0
   InstantiateDelay: 0.5
-  ScaleUpSpeed: 10
+  ScaleUpSpeed: 5
   TargetScale: {x: 1.5, y: 1.5, z: 1.5}

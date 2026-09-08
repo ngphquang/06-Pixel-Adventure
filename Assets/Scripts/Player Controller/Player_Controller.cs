@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -37,6 +38,9 @@ public class Player_Controller : MonoBehaviour
     [Header("Collision")] [SerializeField] private float GroundCheckDistance;
     [SerializeField] private float WallCheckDistance;
     [SerializeField] private LayerMask GroundLayer;
+    [Space] [SerializeField] private Transform EnemiesCheckPosition;
+    [SerializeField] private float EnemiesCheckRadius;
+    [SerializeField] private LayerMask EnemiesLayer;
 
     [Header("VFX")] [SerializeField] private GameObject DeadVFX;
 
@@ -70,6 +74,7 @@ public class Player_Controller : MonoBehaviour
         IsRunning();
         IsGroundDetected();
         IsWallDetected();
+        EnemiesDetectionManager();
         PlayerRun();
         PlayerWallSlide();
         FlipSprite();
@@ -270,11 +275,30 @@ public class Player_Controller : MonoBehaviour
         PlayerAnimator.SetBool("IsWallDetected", IsWallDetected());
     }
 
+    // ReSharper disable Unity.PerformanceAnalysis
+    // ReSharper disable once Unity.PreferNonAllocApi
+    private void EnemiesDetectionManager()
+    {
+        if (PlayerRigidBody.linearVelocityY >= 0 || IsKnockedBack) { return; }
+
+        var colliders =
+            Physics2D.OverlapCircleAll(EnemiesCheckPosition.position, EnemiesCheckRadius, EnemiesLayer);
+        foreach (var enemy in colliders)
+        {
+            if (enemy.IsUnityNull()) return;
+
+            var enemiesManager = enemy.GetComponent<Enemies_Manager>();
+            enemiesManager.EnemiesDie();
+            PlayerJump();
+        }
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position,
             new Vector2(transform.position.x, transform.position.y - GroundCheckDistance));
         Gizmos.DrawLine(transform.position,
             new Vector2(transform.position.x + WallCheckDistance, transform.position.y));
+        Gizmos.DrawWireSphere(EnemiesCheckPosition.position, EnemiesCheckRadius);
     }
 }
