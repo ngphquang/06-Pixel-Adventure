@@ -311,7 +311,7 @@ MonoBehaviour:
   KnockBackDuration: 1
   KnockBackForce: {x: 5, y: 10}
   GroundCheckDistance: 0.8
-  WallCheckDistance: 0
+  WallCheckDistance: 0.8
   GroundLayer:
     serializedVersion: 2
     m_Bits: 8

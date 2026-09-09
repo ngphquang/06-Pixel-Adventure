@@ -213,6 +213,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   GroundCheck: {fileID: 7516883986109568406}
+  PlayerLayer:
+    serializedVersion: 2
+    m_Bits: 128
   DeathImpactForce: 1000
   DeathTorque: 60
   DeathGravity: 5

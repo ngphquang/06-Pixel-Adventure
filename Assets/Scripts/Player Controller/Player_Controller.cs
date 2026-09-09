@@ -285,7 +285,7 @@ public class Player_Controller : MonoBehaviour
             Physics2D.OverlapCircleAll(EnemiesCheckPosition.position, EnemiesCheckRadius, EnemiesLayer);
         foreach (var enemy in colliders)
         {
-            if (enemy.IsUnityNull()) return;
+            if (enemy.IsUnityNull() || !enemy.GetComponent<Enemies_Manager>()) return;
 
             var enemiesManager = enemy.GetComponent<Enemies_Manager>();
             enemiesManager.EnemiesDie();
