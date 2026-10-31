@@ -288,7 +288,7 @@ public class Player_Controller : MonoBehaviour
             if (enemy.IsUnityNull() || !enemy.GetComponent<Enemies_Manager>()) return;
 
             var enemiesManager = enemy.GetComponent<Enemies_Manager>();
-            enemiesManager.EnemiesDie();
+            // enemiesManager.EnemiesDie();
             PlayerJump();
         }
     }
