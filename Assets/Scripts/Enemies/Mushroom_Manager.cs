@@ -6,8 +6,6 @@ public class Mushroom_Manager : Enemies_Manager
     {
         if (IsDead) return;
         base.Update();
-        HandleAnimation();
-        CollisionCheck();
         MushroomRun();
         HandleFlip();
     }
@@ -16,14 +14,9 @@ public class Mushroom_Manager : Enemies_Manager
     {
         if (!IsGroundDetected) return;
         if (IsGroundInFrontDetected && !IsWallDetected) return;
-        FlipSprite();
-        IdleTimer = IdleDuration;
         EnemiesRigidBody.linearVelocity = Vector2.zero;
-    }
-
-    private void HandleAnimation()
-    {
-        EnemiesAnimator.SetFloat("VelocityX", EnemiesRigidBody.linearVelocityX);
+        IdleTimer = IdleDuration;
+        FlipSprite();
     }
 
     private void MushroomRun()

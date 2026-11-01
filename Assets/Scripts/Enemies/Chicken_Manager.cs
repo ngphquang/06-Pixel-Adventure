@@ -3,10 +3,8 @@ using UnityEngine;
 public class Chicken_Manager : Enemies_Manager
 {
     [Header("Chicken")] [SerializeField] private float AggressiveDuration;
-    [SerializeField] private float DetectionRange;
     [SerializeField] private float FollowFlipDelay;
     private float AggressiveTimer;
-    private bool PlayerDetected;
     private bool CanFlip = true;
 
     protected override void Awake()
@@ -19,8 +17,6 @@ public class Chicken_Manager : Enemies_Manager
     {
         if (IsDead) return;
         base.Update();
-        HandleAnimation();
-        CollisionCheck();
         ChickenRun();
         HandleFlip();
         FollowPlayer();
@@ -58,10 +54,7 @@ public class Chicken_Manager : Enemies_Manager
     protected override void CollisionCheck()
     {
         base.CollisionCheck();
-        PlayerDetected = Physics2D.Raycast(transform.position,
-            Vector2.left * Mathf.Sign(transform.localScale.x), DetectionRange, PlayerLayer);
-
-        if (PlayerDetected)
+        if (IsPlayerDetected)
         {
             CanMove = true;
             AggressiveTimer = AggressiveDuration;
@@ -70,23 +63,10 @@ public class Chicken_Manager : Enemies_Manager
         if (AggressiveTimer < 0) { CanMove = false; }
     }
 
-    private void HandleAnimation()
-    {
-        EnemiesAnimator.SetFloat("VelocityX", EnemiesRigidBody.linearVelocityX);
-    }
-
     private void ChickenRun()
     {
         if (!IsGroundDetected || !CanMove) { return; }
 
         EnemiesRigidBody.linearVelocityX = MoveSpeed * FacingDirection;
-    }
-
-    protected override void OnDrawGizmos()
-    {
-        base.OnDrawGizmos();
-        Gizmos.DrawLine(transform.position,
-            new Vector2((transform.position.x - DetectionRange) * Mathf.Sign(transform.localScale.x),
-                transform.position.y));
     }
 }

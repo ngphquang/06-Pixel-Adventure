@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -14,7 +13,7 @@ public class Enemies_Manager : MonoBehaviour
     [Header("Collision")] [SerializeField] protected float GroundCheckDistance = 1.1f;
     [SerializeField] protected float WallCheckDistance = 1.1f;
     [SerializeField] protected LayerMask GroundLayer;
-    [SerializeField] protected Transform GroundCheck;
+    [SerializeField] protected Transform GroundChecker;
     [SerializeField] protected LayerMask PlayerLayer;
     protected Transform Player;
     protected bool IsGroundInFrontDetected;
@@ -23,19 +22,23 @@ public class Enemies_Manager : MonoBehaviour
     protected bool IsWallDetected;
     protected bool FacingRight;
 
+    [Header("Player Detection")] [SerializeField]
+    protected float DetectionRange;
+    protected bool IsPlayerDetected;
+
     [Header("Death")] [SerializeField] private float DeathImpactForce;
     [SerializeField] private float DeathTorque;
     [SerializeField] private float DeathGravity;
     [SerializeField] private float DestroyTime;
-    [SerializeField] private GameObject EnemiesDamageArea;
-    private Collider2D EnemiesCollider;
+    private Collider2D[] EnemiesColliders;
     protected bool IsDead;
 
     protected virtual void Awake()
     {
         EnemiesAnimator = GetComponent<Animator>();
         EnemiesRigidBody = GetComponent<Rigidbody2D>();
-        EnemiesCollider = GetComponent<Collider2D>();
+        EnemiesColliders = GetComponentsInChildren<Collider2D>();
+        IsDead = false;
     }
 
     private void Start()
@@ -50,17 +53,26 @@ public class Enemies_Manager : MonoBehaviour
 
     protected virtual void Update()
     {
+        CollisionCheck();
+        HandleAnimation();
         IdleTimer -= Time.deltaTime;
+    }
+
+    protected virtual void HandleAnimation()
+    {
+        EnemiesAnimator.SetFloat("VelocityX", EnemiesRigidBody.linearVelocityX);
     }
 
     protected virtual void CollisionCheck()
     {
-        IsGroundInFrontDetected = Physics2D.Raycast(GroundCheck.position,
+        IsGroundInFrontDetected = Physics2D.Raycast(GroundChecker.position,
             Vector2.down, GroundCheckDistance, GroundLayer);
         IsGroundDetected = Physics2D.Raycast(transform.position,
             Vector2.down, GroundCheckDistance, GroundLayer);
-        IsWallDetected = Physics2D.Raycast(GroundCheck.position,
-            Vector2.right * Mathf.Sign(transform.localScale.x), WallCheckDistance, GroundLayer);
+        IsWallDetected = Physics2D.Raycast(GroundChecker.position,
+            Vector2.left * Mathf.Sign(transform.localScale.x), WallCheckDistance, GroundLayer);
+        IsPlayerDetected = Physics2D.Raycast(GroundChecker.position,
+            Vector2.left * Mathf.Sign(transform.localScale.x), DetectionRange, PlayerLayer);
     }
 
     protected virtual void FlipSprite()
@@ -73,13 +85,13 @@ public class Enemies_Manager : MonoBehaviour
     public virtual void EnemiesDie()
     {
         IsDead = true;
-        Destroy(EnemiesDamageArea);
         EnemiesAnimator.SetTrigger("IsHit");
         EnemiesRigidBody.AddForce(new Vector2(0, DeathImpactForce));
         EnemiesRigidBody.freezeRotation = false;
         EnemiesRigidBody.AddTorque(DeathTorque);
         EnemiesRigidBody.gravityScale = DeathGravity;
-        EnemiesCollider.enabled = false;
+        foreach (var collider2D in EnemiesColliders) { collider2D.enabled = false; }
+
         StartCoroutine(DestroyEnemies());
     }
 
@@ -91,11 +103,14 @@ public class Enemies_Manager : MonoBehaviour
 
     protected virtual void OnDrawGizmos()
     {
-        Gizmos.DrawLine(GroundCheck.position,
-            new Vector2(GroundCheck.position.x, GroundCheck.position.y - GroundCheckDistance));
+        Gizmos.DrawLine(GroundChecker.position,
+            new Vector2(GroundChecker.position.x, GroundChecker.position.y - GroundCheckDistance));
         Gizmos.DrawLine(transform.position,
-            new Vector2(transform.position.x, GroundCheck.position.y - GroundCheckDistance));
-        Gizmos.DrawLine(GroundCheck.position,
-            new Vector2(GroundCheck.position.x + WallCheckDistance, GroundCheck.position.y));
+            new Vector2(transform.position.x, GroundChecker.position.y - GroundCheckDistance));
+        Gizmos.DrawLine(GroundChecker.position,
+            new Vector2(GroundChecker.position.x + WallCheckDistance, GroundChecker.position.y));
+        Gizmos.DrawLine(GroundChecker.position,
+            new Vector2((GroundChecker.position.x - DetectionRange) * Mathf.Sign(transform.localScale.x),
+                GroundChecker.position.y));
     }
 }
