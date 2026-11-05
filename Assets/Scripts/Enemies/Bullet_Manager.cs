@@ -4,7 +4,7 @@ using UnityEngine;
 public class Bullet_Manager : MonoBehaviour
 {
     [SerializeField] private float BulletSpeed;
-    [SerializeField] private float BulletsLiveTime;
+    [SerializeField] private string GroundLayerName = "Ground";
     private Rigidbody2D BulletsRigidBody;
 
     private void Awake()
@@ -12,21 +12,25 @@ public class Bullet_Manager : MonoBehaviour
         BulletsRigidBody = GetComponent<Rigidbody2D>();
     }
 
+    // ReSharper disable once InvertIf
     private void OnTriggerEnter2D(Collider2D collider)
     {
         var player = collider.GetComponent<Player_Controller>();
-        if (player == null) return;
-
-        player.PlayerKnockBack(gameObject.transform);
+        if (player != null)
+        {
+            player.PlayerKnockBack(gameObject.transform);
+            Destroy(gameObject);
+        }
+        else if (collider.gameObject.layer == LayerMask.NameToLayer(GroundLayerName)) Destroy(gameObject);
     }
 
-    public void BulletsFly()
+    public void BulletsFly(float direction)
     {
-        BulletsRigidBody.linearVelocityX = BulletSpeed * Mathf.Sign(transform.localScale.x) * -1;
+        BulletsRigidBody.linearVelocityX = BulletSpeed * direction * -1;
     }
 
-    public void DestroyBullets()
+    public void DestroyBullets(float time)
     {
-        Destroy(gameObject, BulletsLiveTime);
+        Destroy(gameObject, time);
     }
 }
