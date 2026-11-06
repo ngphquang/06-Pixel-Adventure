@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chicken_Manager
   MoveSpeed: 8
-  IdleDuration: 0.5
+  IdleDuration: 0
   GroundCheckDistance: 1.1
   WallCheckDistance: 0.1
   GroundLayer:

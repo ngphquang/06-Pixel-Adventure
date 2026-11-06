@@ -53,6 +53,7 @@ public class Enemies_Manager : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (IsDead) return;
         CollisionCheck();
         HandleAnimation();
         IdleTimer -= Time.deltaTime;

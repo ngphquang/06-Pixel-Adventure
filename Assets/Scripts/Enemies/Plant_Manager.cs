@@ -17,7 +17,6 @@ public class Plant_Manager : Enemies_Manager
     protected override void Awake()
     {
         base.Awake();
-        UpdateBullets();
         ShootDirection = FacingLeft ? -1f : 1f;
     }
 
@@ -38,15 +37,6 @@ public class Plant_Manager : Enemies_Manager
     {
         LastTimeAttacked = Time.time;
         EnemiesAnimator.SetTrigger("IsPlayerDetected");
-    }
-
-    private void UpdateBullets()
-    {
-        BulletsArray = new Bullet_Manager[GetComponentsInChildren<Bullet_Manager>().Length];
-        for (var i = 0; i < BulletsArray.Length; i++)
-        {
-            BulletsArray[i] = GetComponentsInChildren<Bullet_Manager>()[i];
-        }
     }
 
     protected override void HandleAnimation()

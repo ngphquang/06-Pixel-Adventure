@@ -15,7 +15,6 @@ public class Chicken_Manager : Enemies_Manager
 
     protected override void Update()
     {
-        if (IsDead) return;
         base.Update();
         ChickenRun();
         HandleFlip();

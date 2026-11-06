@@ -328,7 +328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Rino_Manager
   MoveSpeed: 10
-  IdleDuration: 1
+  IdleDuration: 0
   GroundCheckDistance: 1.1
   WallCheckDistance: 0.6
   GroundLayer:
