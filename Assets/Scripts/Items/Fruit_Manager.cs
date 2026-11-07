@@ -1,4 +1,5 @@
 using System;
+using Players;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -46,7 +47,10 @@ public class Fruit_Manager : MonoBehaviour
 
     private void SetRandomFruits()
     {
-        if (!GameManager.GetRandomFruits()) { ChooseSpecificFruits(); }
+        if (!GameManager.GetRandomFruits())
+        {
+            ChooseSpecificFruits();
+        }
         else
         {
             var RandomFruitsIndex = Random.Range(0, 8);

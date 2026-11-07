@@ -1,24 +1,28 @@
+using Players;
 using UnityEngine;
 
-public class Checkpoint_Manager : MonoBehaviour
+namespace Checkpoints
 {
-    private Animator CheckpointAnimator;
-    private bool IsActive;
-
-    private void OnTriggerEnter2D(Collider2D other)
+    public class Checkpoint_Manager : MonoBehaviour
     {
-        if (IsActive && !Game_Manager.GameManagerInstance.CheckpointsCanBeReactivated) return;
+        private Animator CheckpointAnimator;
+        private bool IsActive;
 
-        var Player = other.GetComponent<Player_Controller>();
-        if (Player == null) return;
-        CheckpointAnimator = GetComponent<Animator>();
-        ActivateCheckpoint();
-    }
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (IsActive && !Game_Manager.GameManagerInstance.CheckpointsCanBeReactivated) return;
 
-    void ActivateCheckpoint()
-    {
-        IsActive = true;
-        CheckpointAnimator.SetTrigger("IsActive");
-        Game_Manager.GameManagerInstance.UpdateRespawnCheckpoint(gameObject.transform);
+            var Player = other.GetComponent<Player_Controller>();
+            if (Player == null) return;
+            CheckpointAnimator = GetComponent<Animator>();
+            ActivateCheckpoint();
+        }
+
+        void ActivateCheckpoint()
+        {
+            IsActive = true;
+            CheckpointAnimator.SetTrigger("IsActive");
+            Game_Manager.GameManagerInstance.UpdateRespawnCheckpoint(gameObject.transform);
+        }
     }
 }

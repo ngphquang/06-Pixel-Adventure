@@ -1,15 +1,18 @@
-using System;
+using Players;
 using UnityEngine;
 
-public class Startpoint_Manager : MonoBehaviour
+namespace Checkpoints
 {
-    private Animator StartpointAnimator;
-
-    private void OnTriggerExit2D(Collider2D other)
+    public class Startpoint_Manager : MonoBehaviour
     {
-        var Player = other.GetComponent<Player_Controller>();
-        if (Player == null) return;
-        StartpointAnimator = GetComponent<Animator>();
-        StartpointAnimator.SetTrigger("IsActive");
+        private Animator StartpointAnimator;
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            var Player = other.GetComponent<Player_Controller>();
+            if (Player == null) return;
+            StartpointAnimator = GetComponent<Animator>();
+            StartpointAnimator.SetTrigger("IsActive");
+        }
     }
 }

@@ -1,36 +1,44 @@
-using System;
+using Players;
 using UnityEngine;
 
-public class Bullet_Manager : MonoBehaviour
+namespace Enemies
 {
-    [SerializeField] private float BulletSpeed;
-    [SerializeField] private string GroundLayerName = "Ground";
-    private Rigidbody2D BulletsRigidBody;
-
-    private void Awake()
+    public class Bullet_Manager : MonoBehaviour
     {
-        BulletsRigidBody = GetComponent<Rigidbody2D>();
-    }
+        [SerializeField] private float BulletSpeed;
+        [SerializeField] private string GroundLayerName = "Ground";
+        private Rigidbody2D BulletsRigidBody;
 
-    // ReSharper disable once InvertIf
-    private void OnTriggerEnter2D(Collider2D collider)
-    {
-        var player = collider.GetComponent<Player_Controller>();
-        if (player != null)
+        private void Awake()
         {
-            player.PlayerKnockBack(gameObject.transform);
-            Destroy(gameObject);
+            BulletsRigidBody = GetComponent<Rigidbody2D>();
         }
-        else if (collider.gameObject.layer == LayerMask.NameToLayer(GroundLayerName)) Destroy(gameObject);
-    }
 
-    public void BulletsFly(float direction)
-    {
-        BulletsRigidBody.linearVelocityX = BulletSpeed * direction * -1;
-    }
+        // ReSharper disable once InvertIf
+        private void OnTriggerEnter2D(Collider2D collider)
+        {
+            var player = collider.GetComponent<Player_Controller>();
+            if (player != null)
+            {
+                player.PlayerKnockBack(gameObject.transform);
+                Destroy(gameObject);
+            }
+            else if (collider.gameObject.layer == LayerMask.NameToLayer(GroundLayerName)) Destroy(gameObject);
+        }
 
-    public void DestroyBullets(float time)
-    {
-        Destroy(gameObject, time);
+        public void BulletsFly(float direction)
+        {
+            BulletsRigidBody.linearVelocityX = BulletSpeed * direction * -1;
+        }
+
+        public void DestroyBullets(float time)
+        {
+            Destroy(gameObject, time);
+        }
+
+        public void BulletFlip(float direction)
+        {
+            transform.localScale = new Vector2(direction * -1f, transform.localScale.y);
+        }
     }
 }

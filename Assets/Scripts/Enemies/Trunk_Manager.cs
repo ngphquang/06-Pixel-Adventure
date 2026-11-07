@@ -1,61 +1,66 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class Trunk_Manager : Enemies_Manager
+namespace Enemies
 {
-    [Header("Trunk")] [SerializeField] private Transform BulletsShooter;
-    [SerializeField] private Bullet_Manager[] BulletsArray;
-    [SerializeField] private float BulletShootRate;
-    [SerializeField] private float BulletsLiveTime;
-    private float LastTimeAttacked;
-    private bool CanAttack;
-
-    protected override void Update()
+    public class Trunk_Manager : Enemies_Manager
     {
-        base.Update();
-        CheckBool();
-        TrunkRun();
-        HandleFlip();
-        Attack();
-    }
+        [Header("Trunk")] [SerializeField] private Transform BulletsShooter;
+        [SerializeField] private Bullet_Manager[] BulletsArray;
+        [SerializeField] private float BulletShootRate;
+        [SerializeField] private float BulletsLiveTime;
+        private float LastTimeAttacked;
+        private bool CanAttack;
 
-    private void CheckBool()
-    {
-        CanMove = !IsPlayerDetected && IsGroundDetected && IsGroundInFrontDetected;
-        CanAttack = Time.time >= LastTimeAttacked + BulletShootRate;
-    }
+        protected override void Update()
+        {
+            base.Update();
+            CheckBool();
+            TrunkRun();
+            HandleFlip();
+            Attack();
+        }
 
-    private void TrunkRun()
-    {
-        if (!IsGroundDetected || !CanMove || IdleTimer > 0) { return; }
+        private void CheckBool()
+        {
+            CanMove = !IsPlayerDetected && IsGroundDetected && IsGroundInFrontDetected;
+            CanAttack = Time.time >= LastTimeAttacked + BulletShootRate;
+        }
 
-        EnemiesRigidBody.linearVelocityX = MoveSpeed * FacingDirection;
-    }
+        private void TrunkRun()
+        {
+            if (!IsGroundDetected || !CanMove || IdleTimer > 0)
+            {
+                return;
+            }
 
-    private void HandleFlip()
-    {
-        if (!IsGroundDetected) return;
-        if (IsGroundInFrontDetected && !IsWallDetected) return;
+            EnemiesRigidBody.linearVelocityX = MoveSpeed * FacingDirection;
+        }
 
-        EnemiesRigidBody.linearVelocity = Vector2.zero;
-        CanMove = false;
-        IdleTimer = IdleDuration;
-        FlipSprite();
-    }
+        private void HandleFlip()
+        {
+            if (!IsGroundDetected) return;
+            if (IsGroundInFrontDetected && !IsWallDetected) return;
 
-    private void Attack()
-    {
-        if (!IsPlayerDetected || !CanAttack) return;
-        LastTimeAttacked = Time.time;
-        EnemiesAnimator.SetTrigger("IsPlayerDetected");
-    }
+            EnemiesRigidBody.linearVelocity = Vector2.zero;
+            CanMove = false;
+            IdleTimer = IdleDuration;
+            FlipSprite();
+        }
 
-    private void ShootBullet()
-    {
-        var Bullets = Instantiate(BulletsArray[Random.Range(0, BulletsArray.Length)],
-            BulletsShooter.position, Quaternion.identity);
-        Bullets.AddComponent<Bullet_Manager>();
-        Bullets.BulletsFly(Mathf.Sign(transform.localScale.x));
-        Bullets.DestroyBullets(BulletsLiveTime);
+        private void Attack()
+        {
+            if (!IsPlayerDetected || !CanAttack) return;
+            LastTimeAttacked = Time.time;
+            EnemiesAnimator.SetTrigger("IsPlayerDetected");
+        }
+
+        private void ShootBullet()
+        {
+            var Bullets = Instantiate(BulletsArray[Random.Range(0, BulletsArray.Length)],
+                BulletsShooter.position, Quaternion.identity);
+            Bullets.BulletFlip(transform.localScale.x);
+            Bullets.BulletsFly(Mathf.Sign(transform.localScale.x));
+            Bullets.DestroyBullets(BulletsLiveTime);
+        }
     }
 }

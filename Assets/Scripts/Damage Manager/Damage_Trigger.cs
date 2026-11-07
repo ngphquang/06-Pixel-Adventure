@@ -1,11 +1,28 @@
+using Players;
 using UnityEngine;
 
-public class Damage_Trigger : MonoBehaviour
+namespace Damage_Manager
 {
-    private void OnTriggerEnter2D(Collider2D other)
+    public class Damage_Trigger : MonoBehaviour
     {
-        var player = other.gameObject.GetComponent<Player_Controller>();
-        if (player != null) player.PlayerKnockBack(gameObject.transform);
-        // Game_Manager.GameManagerInstance.RespawnPlayer();
+        [SerializeField] private bool IsEnemy;
+        private Collider2D EnemiesCollider;
+
+        private void Awake()
+        {
+            EnemiesCollider = GetComponentInParent<Collider2D>();
+        }
+
+        private void Update()
+        {
+            if (!EnemiesCollider.enabled && IsEnemy) Destroy(gameObject);
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            var player = other.gameObject.GetComponent<Player_Controller>();
+            if (player != null) player.PlayerKnockBack(gameObject.transform);
+            // Game_Manager.GameManagerInstance.RespawnPlayer();
+        }
     }
 }

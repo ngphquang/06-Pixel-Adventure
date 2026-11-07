@@ -1,9 +1,12 @@
 using UnityEngine;
 
-public class Destroy_Event : MonoBehaviour
+namespace Damage_Manager
 {
-    private void Destroy()
+    public class Destroy_Event : MonoBehaviour
     {
-        Destroy(gameObject);
+        private void Destroy()
+        {
+            Destroy(gameObject);
+        }
     }
 }
