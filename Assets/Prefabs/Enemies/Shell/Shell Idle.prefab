@@ -123,7 +123,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.71916, y: -6.22281, z: 0}
-  m_LocalScale: {x: 1, y: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5214325680558751223}
@@ -313,7 +313,7 @@ MonoBehaviour:
   DeathTorque: 0
   DeathGravity: 0
   DestroyTime: 0
-  Shell: {guid: 888e4cdab08cfe84d9ba246d29b5c21c, type: 3}
+  Shell: {fileID: 322383945630332527, guid: 888e4cdab08cfe84d9ba246d29b5c21c, type: 3}
   CanShell: 0
 --- !u!1 &5567166755735289942
 GameObject:

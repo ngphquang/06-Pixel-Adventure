@@ -1,9 +1,11 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace Enemies
 {
     public class Shell_Manager : Enemies_Manager
     {
+        [Header("Shell")] [SerializeField] private Shell_Manager Shell;
         [SerializeField] private bool CanShell;
         private bool HadSpawned;
 
@@ -30,6 +32,7 @@ namespace Enemies
                 return;
             }
 
+            EnemiesRigidBody.linearVelocityX = MoveSpeed * transform.localScale.x * -1f;
         }
 
         protected override void HandleAnimation()
@@ -41,7 +44,14 @@ namespace Enemies
         private void ShellSpawn()
         {
             if (HadSpawned || !Shell) return;
+            var shell = Instantiate(Shell, transform.position, Quaternion.identity);
+            shell.ShellFlip(transform.localScale.x);
             HadSpawned = true;
+        }
+
+        public void ShellFlip(float direction)
+        {
+            transform.localScale = new Vector2(direction, transform.localScale.y);
         }
     }
 }
