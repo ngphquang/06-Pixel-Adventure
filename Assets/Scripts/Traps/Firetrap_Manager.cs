@@ -1,44 +1,46 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
-public class Firetrap_Manager : MonoBehaviour
+namespace Traps
 {
-    [SerializeField] private float FireCoolDown;
-    [SerializeField] private Firetrap_Button_Manager FireButton;
-    private Animator FiretrapAnimator;
-    private CapsuleCollider2D FiretrapCollider;
-    private bool IsActive;
-
-    private void Awake()
+    public class Firetrap_Manager : MonoBehaviour
     {
-        FiretrapAnimator = GetComponent<Animator>();
-        FiretrapCollider = GetComponent<CapsuleCollider2D>();
-    }
+        [SerializeField] private float FireCoolDown;
+        [SerializeField] private Firetrap_Button_Manager FireButton;
+        private Animator FiretrapAnimator;
+        private CapsuleCollider2D FiretrapCollider;
+        private bool IsActive;
 
-    private void Start()
-    {
-        if (FireButton == null) return;
-        SetFire(true);
-    }
+        private void Awake()
+        {
+            FiretrapAnimator = GetComponent<Animator>();
+            FiretrapCollider = GetComponent<CapsuleCollider2D>();
+        }
 
-    private void SetFire(bool active)
-    {
-        FiretrapAnimator.SetBool("IsActive", active);
-        FiretrapCollider.enabled = active;
-        IsActive = active;
-    }
+        private void Start()
+        {
+            if (FireButton == null) return;
+            SetFire(true);
+        }
 
-    public void SwitchOffFire()
-    {
-        if (!IsActive) return;
-        StartCoroutine(FireCoroutine());
-    }
+        private void SetFire(bool active)
+        {
+            FiretrapAnimator.SetBool("IsActive", active);
+            FiretrapCollider.enabled = active;
+            IsActive = active;
+        }
 
-    private IEnumerator FireCoroutine()
-    {
-        SetFire(false);
-        yield return new WaitForSeconds(FireCoolDown);
-        SetFire(true);
+        public void SwitchOffFire()
+        {
+            if (!IsActive) return;
+            StartCoroutine(FireCoroutine());
+        }
+
+        private IEnumerator FireCoroutine()
+        {
+            SetFire(false);
+            yield return new WaitForSeconds(FireCoolDown);
+            SetFire(true);
+        }
     }
 }

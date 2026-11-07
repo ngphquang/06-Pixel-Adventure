@@ -1,28 +1,33 @@
 using UnityEngine;
 
-public class Mushroom_Manager : Enemies_Manager
+namespace Enemies
 {
-    protected override void Update()
+    public class Mushroom_Manager : Enemies_Manager
     {
-        if (IsDead) return;
-        base.Update();
-        MushroomRun();
-        HandleFlip();
-    }
+        protected override void Update()
+        {
+            base.Update();
+            MushroomRun();
+            HandleFlip();
+        }
 
-    private void HandleFlip()
-    {
-        if (!IsGroundDetected) return;
-        if (IsGroundInFrontDetected && !IsWallDetected) return;
-        EnemiesRigidBody.linearVelocity = Vector2.zero;
-        IdleTimer = IdleDuration;
-        FlipSprite();
-    }
+        private void HandleFlip()
+        {
+            if (!IsGroundDetected) return;
+            if (IsGroundInFrontDetected && !IsWallDetected) return;
+            EnemiesRigidBody.linearVelocity = Vector2.zero;
+            IdleTimer = IdleDuration;
+            FlipSprite();
+        }
 
-    private void MushroomRun()
-    {
-        if (IdleTimer > 0 || !IsGroundDetected) { return; }
+        private void MushroomRun()
+        {
+            if (IdleTimer > 0 || !IsGroundDetected)
+            {
+                return;
+            }
 
-        EnemiesRigidBody.linearVelocityX = MoveSpeed * FacingDirection;
+            EnemiesRigidBody.linearVelocityX = MoveSpeed * FacingDirection;
+        }
     }
 }

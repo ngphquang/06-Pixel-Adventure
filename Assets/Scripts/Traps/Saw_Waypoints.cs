@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public class Saw_Waypoints : MonoBehaviour
+namespace Traps
 {
-
+    public class Saw_Waypoints : MonoBehaviour
+    {
+    }
 }

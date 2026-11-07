@@ -1,55 +1,54 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class Plant_Manager : Enemies_Manager
+namespace Enemies
 {
-    [Header("Plant")] [SerializeField] private Transform BulletsShooter;
-    [SerializeField] private Bullet_Manager[] BulletsArray;
-    [SerializeField] private float BulletShootRate;
-    [SerializeField] private float BulletsLiveTime;
-    [SerializeField] private bool FacingLeft;
-    private float ShootDirection;
-    private float LastTimeAttacked;
-    private bool CanAttack;
-
-    protected override void Awake()
+    public class Plant_Manager : Enemies_Manager
     {
-        base.Awake();
-        ShootDirection = FacingLeft ? -1f : 1f;
-    }
+        [Header("Plant")] [SerializeField] private Transform BulletsShooter;
+        [SerializeField] private Bullet_Manager[] BulletsArray;
+        [SerializeField] private float BulletShootRate;
+        [SerializeField] private float BulletsLiveTime;
+        [SerializeField] private bool FacingLeft;
+        private float ShootDirection;
+        private float LastTimeAttacked;
+        private bool CanAttack;
 
-    private void Start()
-    {
-        transform.localScale = new Vector2(ShootDirection, transform.localScale.y);
-    }
+        protected override void Awake()
+        {
+            base.Awake();
+            ShootDirection = FacingLeft ? -1f : 1f;
+        }
 
-    // ReSharper disable once InvertIf
-    protected override void Update()
-    {
-        base.Update();
-        CanAttack = Time.time >= LastTimeAttacked + BulletShootRate;
-        if (IsPlayerDetected && CanAttack) Attack();
-    }
+        private void Start()
+        {
+            transform.localScale = new Vector2(ShootDirection, transform.localScale.y);
+        }
 
-    private void Attack()
-    {
-        LastTimeAttacked = Time.time;
-        EnemiesAnimator.SetTrigger("IsPlayerDetected");
-    }
+        // ReSharper disable once InvertIf
+        protected override void Update()
+        {
+            base.Update();
+            CanAttack = Time.time >= LastTimeAttacked + BulletShootRate;
+            if (IsPlayerDetected && CanAttack) Attack();
+        }
 
-    protected override void HandleAnimation()
-    {
-        // base.HandleAnimation();
-    }
+        private void Attack()
+        {
+            LastTimeAttacked = Time.time;
+            EnemiesAnimator.SetTrigger("IsPlayerDetected");
+        }
 
-    private void ShootBullet()
-    {
-        var Bullets = Instantiate(BulletsArray[Random.Range(0, BulletsArray.Length)],
-            BulletsShooter.position, Quaternion.identity);
-        Bullets.AddComponent<Bullet_Manager>();
-        Bullets.BulletsFly(ShootDirection);
-        Bullets.DestroyBullets(BulletsLiveTime);
+        protected override void HandleAnimation()
+        {
+            // base.HandleAnimation();
+        }
+
+        private void ShootBullet()
+        {
+            var Bullets = Instantiate(BulletsArray[Random.Range(0, BulletsArray.Length)],
+                BulletsShooter.position, Quaternion.identity);
+            Bullets.BulletsFly(ShootDirection);
+            Bullets.DestroyBullets(BulletsLiveTime);
+        }
     }
 }

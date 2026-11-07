@@ -312,6 +312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1cf989040a3f964f9adf767819b0055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Damage_Trigger
+  IsEnemy: 1
 --- !u!1 &5710717444539583827
 GameObject:
   m_ObjectHideFlags: 0

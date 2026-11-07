@@ -1,26 +1,29 @@
-using System;
+using Players;
 using UnityEngine;
 
-public class Trampoline_Manager : MonoBehaviour
+namespace Traps
 {
-    [SerializeField] private float PushForce;
-    [SerializeField] private float DisableControlTimer;
-    private Transform TrampolineTransform;
-    private Animator TrampolineAnimator;
-
-    private void Awake()
+    public class Trampoline_Manager : MonoBehaviour
     {
-        TrampolineTransform = GetComponent<Transform>();
-        if (TrampolineTransform.rotation != Quaternion.identity) DisableControlTimer *= 5;
-    }
+        [SerializeField] private float PushForce;
+        [SerializeField] private float DisableControlTimer;
+        private Transform TrampolineTransform;
+        private Animator TrampolineAnimator;
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        var Player = other.GetComponent<Player_Controller>();
-        if (Player == null) return;
+        private void Awake()
+        {
+            TrampolineTransform = GetComponent<Transform>();
+            if (TrampolineTransform.rotation != Quaternion.identity) DisableControlTimer *= 5;
+        }
 
-        Player.PushPlayer(transform.up * PushForce, DisableControlTimer);
-        TrampolineAnimator = GetComponent<Animator>();
-        TrampolineAnimator.SetTrigger("IsActive");
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            var Player = other.GetComponent<Player_Controller>();
+            if (Player == null) return;
+
+            Player.PushPlayer(transform.up * PushForce, DisableControlTimer);
+            TrampolineAnimator = GetComponent<Animator>();
+            TrampolineAnimator.SetTrigger("IsActive");
+        }
     }
 }

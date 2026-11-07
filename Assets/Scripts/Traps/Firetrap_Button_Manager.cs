@@ -1,22 +1,25 @@
-using System;
+using Players;
 using UnityEngine;
 
-public class Firetrap_Button_Manager : MonoBehaviour
+namespace Traps
 {
-    private Animator FiretrapButtonAnimator;
-    private Firetrap_Manager Firetrap;
-
-    private void Awake()
+    public class Firetrap_Button_Manager : MonoBehaviour
     {
-        FiretrapButtonAnimator = GetComponent<Animator>();
-        Firetrap = GetComponentInParent<Firetrap_Manager>();
-    }
+        private Animator FiretrapButtonAnimator;
+        private Firetrap_Manager Firetrap;
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        var Player = other.GetComponent<Player_Controller>();
-        if (Player == null) return;
-        FiretrapButtonAnimator.SetTrigger("IsActive");
-        Firetrap.SwitchOffFire();
+        private void Awake()
+        {
+            FiretrapButtonAnimator = GetComponent<Animator>();
+            Firetrap = GetComponentInParent<Firetrap_Manager>();
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            var Player = other.GetComponent<Player_Controller>();
+            if (Player == null) return;
+            FiretrapButtonAnimator.SetTrigger("IsActive");
+            Firetrap.SwitchOffFire();
+        }
     }
 }

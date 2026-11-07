@@ -1,66 +1,69 @@
 using System.Collections;
 using UnityEngine;
 
-public class Rino_Manager : Enemies_Manager
+namespace Enemies
 {
-    [Header("Rino")] [SerializeField] private Vector2 WallHitForce;
-    [SerializeField] private float WallHitTimer;
-    [SerializeField] private float MaxSpeed = 20f;
-    [SerializeField] private float SpeedUpScale = 1.5f;
-    private float OriginalSpeed;
-
-    protected override void Awake()
+    public class Rino_Manager : Enemies_Manager
     {
-        base.Awake();
-        CanMove = false;
-        OriginalSpeed = MoveSpeed;
-    }
+        [Header("Rino")] [SerializeField] private Vector2 WallHitForce;
+        [SerializeField] private float WallHitTimer;
+        [SerializeField] private float MaxSpeed = 20f;
+        [SerializeField] private float SpeedUpScale = 1.5f;
+        private float OriginalSpeed;
 
-    protected override void Update()
-    {
-        if (IsDead) return;
-        base.Update();
-        RinoRun();
-    }
+        protected override void Awake()
+        {
+            base.Awake();
+            CanMove = false;
+            OriginalSpeed = MoveSpeed;
+        }
 
-    private void HandleFlip()
-    {
-        if (!IsGroundDetected) return;
+        protected override void Update()
+        {
+            if (IsDead) return;
+            base.Update();
+            RinoRun();
+        }
 
-        EnemiesRigidBody.linearVelocity = Vector2.zero;
-        CanMove = false;
-        FlipSprite();
-    }
+        private void HandleFlip()
+        {
+            if (!IsGroundDetected) return;
 
-    protected override void CollisionCheck()
-    {
-        base.CollisionCheck();
-        if (!IsGroundInFrontDetected) HandleFlip();
-        else if (IsPlayerDetected && IsGroundDetected) CanMove = true;
-        else if (IsWallDetected && IsGroundDetected) WallHit();
-    }
+            EnemiesRigidBody.linearVelocity = Vector2.zero;
+            CanMove = false;
+            FlipSprite();
+        }
 
-    private void WallHit()
-    {
-        StopAllCoroutines();
-        EnemiesAnimator.SetBool("IsWallHit", true);
-        CanMove = false;
-        MoveSpeed = OriginalSpeed;
-        EnemiesRigidBody.AddForce(new Vector2(WallHitForce.x * FacingDirection * -1, WallHitForce.y));
-        StartCoroutine(ResetWallHit());
-    }
+        protected override void CollisionCheck()
+        {
+            base.CollisionCheck();
+            if (!IsGroundInFrontDetected) HandleFlip();
+            else if (IsPlayerDetected && IsGroundDetected) CanMove = true;
+            else if (IsWallDetected && IsGroundDetected) WallHit();
+        }
 
-    private IEnumerator ResetWallHit()
-    {
-        yield return new WaitForSeconds(WallHitTimer);
-        EnemiesAnimator.SetBool("IsWallHit", false);
-        FlipSprite();
-    }
+        private void WallHit()
+        {
+            StopAllCoroutines();
+            EnemiesAnimator.SetBool("IsWallHit", true);
+            CanMove = false;
+            MoveSpeed = OriginalSpeed;
+            EnemiesRigidBody.AddForce(new Vector2(WallHitForce.x * FacingDirection * -1, WallHitForce.y));
+            StartCoroutine(ResetWallHit());
+        }
 
-    private void RinoRun()
-    {
-        if (!IsGroundDetected || !CanMove) return;
-        MoveSpeed = MoveSpeed >= MaxSpeed ? MaxSpeed : MoveSpeed + SpeedUpScale * Time.deltaTime;
-        EnemiesRigidBody.linearVelocityX = MoveSpeed * FacingDirection;
+        private IEnumerator ResetWallHit()
+        {
+            yield return new WaitForSeconds(WallHitTimer);
+            EnemiesAnimator.SetBool("IsWallHit", false);
+            FlipSprite();
+        }
+
+        private void RinoRun()
+        {
+            if (!IsGroundDetected || !CanMove) return;
+            MoveSpeed = MoveSpeed >= MaxSpeed ? MaxSpeed : MoveSpeed + SpeedUpScale * Time.deltaTime;
+            EnemiesRigidBody.linearVelocityX = MoveSpeed * FacingDirection;
+        }
     }
 }
