@@ -105,11 +105,6 @@ namespace Enemies
             StartCoroutine(DestroyEnemies());
         }
 
-        public bool ReturnDead()
-        {
-            return IsDead;
-        }
-
         private IEnumerator DestroyEnemies()
         {
             yield return new WaitForSeconds(DestroyTime);

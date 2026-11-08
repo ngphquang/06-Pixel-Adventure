@@ -5,32 +5,43 @@ namespace Enemies
 {
     public class Shell_Manager : Enemies_Manager
     {
-        [Header("Shell")] [SerializeField] private Shell_Manager Shell;
-        [SerializeField] private bool CanShell;
+        [Header("Shell")] private bool CanShell = true;
         private bool HadSpawned;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            CanMove = false;
+        }
 
         protected override void Update()
         {
             base.Update();
             ShellRun();
             HandleFlip();
-            if (IsDead) ShellSpawn();
+        }
+
+        public override void EnemiesDie()
+        {
+            if (CanShell)
+            {
+                CanMove = true;
+                CanShell = false;
+                EnemiesAnimator.SetTrigger("IsHit");
+            }
+            else base.EnemiesDie();
         }
 
         private void HandleFlip()
         {
-            if (!IsGroundDetected) return;
-            if (IsGroundInFrontDetected && !IsWallDetected) return;
+            if (!IsGroundDetected || !IsWallDetected) return;
             EnemiesRigidBody.linearVelocity = Vector2.zero;
             FlipSprite();
         }
 
         private void ShellRun()
         {
-            if (!IsGroundDetected || !CanShell)
-            {
-                return;
-            }
+            if (!IsGroundDetected || !CanMove || IsWallDetected) return;
 
             EnemiesRigidBody.linearVelocityX = MoveSpeed * transform.localScale.x * -1f;
         }
@@ -38,15 +49,7 @@ namespace Enemies
         protected override void HandleAnimation()
         {
             // base.HandleAnimation();
-            if (IsWallDetected) EnemiesAnimator.SetTrigger("IsHit");
-        }
-
-        private void ShellSpawn()
-        {
-            if (HadSpawned || !Shell) return;
-            var shell = Instantiate(Shell, transform.position, Quaternion.identity);
-            shell.ShellFlip(transform.localScale.x);
-            HadSpawned = true;
+            if (IsWallDetected && !CanShell && IsGroundDetected) EnemiesAnimator.SetTrigger("IsHit");
         }
 
         public void ShellFlip(float direction)
