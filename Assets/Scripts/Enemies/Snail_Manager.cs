@@ -11,7 +11,7 @@ namespace Enemies
         protected override void Update()
         {
             base.Update();
-            MushroomRun();
+            SnailRun();
             HandleFlip();
             if (IsDead) ShellSpawn();
         }
@@ -25,12 +25,9 @@ namespace Enemies
             FlipSprite();
         }
 
-        private void MushroomRun()
+        private void SnailRun()
         {
-            if (IdleTimer > 0 || !IsGroundDetected)
-            {
-                return;
-            }
+            if (IdleTimer > 0 || !IsGroundDetected) return;
 
             EnemiesRigidBody.linearVelocityX = MoveSpeed * FacingDirection;
         }
