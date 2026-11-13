@@ -41,8 +41,8 @@ namespace Traps
 
         private void InstantiateArrow()
         {
-            var ArrowPrefab = Game_Manager.GameManagerInstance.ArrowPrefab;
-            Game_Manager.GameManagerInstance.CreateObject(ArrowPrefab, transform, InstantiateDelay);
+            var arrowPrefab = Game_Manager.GameManagerInstance.ArrowPrefab;
+            Game_Manager.GameManagerInstance.CreateObject(arrowPrefab, transform, InstantiateDelay);
             Destroy(gameObject);
         }
     }

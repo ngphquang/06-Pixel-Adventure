@@ -180,11 +180,11 @@ namespace Players
         {
             if (IsKnockedBack) return;
 
-            var FacingDirection = 1f;
-            if (transform.position.x < damagePosition.position.x) FacingDirection = -1f;
+            var facingDirection = 1f;
+            if (transform.position.x < damagePosition.position.x) facingDirection = -1f;
 
             StartCoroutine(KnockBackCoroutine());
-            PlayerRigidBody.linearVelocity = new Vector2(KnockBackForce.x * FacingDirection, KnockBackForce.y);
+            PlayerRigidBody.linearVelocity = new Vector2(KnockBackForce.x * facingDirection, KnockBackForce.y);
             StopCoroutine(KnockBackCoroutine());
         }
 
@@ -223,11 +223,11 @@ namespace Players
 
         private void PlayerWallSlide()
         {
-            var FastWallSlideFriction = MoveInput.y < 0 ? WallSlideFriction * 2f : WallSlideFriction;
+            var fastWallSlideFriction = MoveInput.y < 0 ? WallSlideFriction * 2f : WallSlideFriction;
 
             if (IsWallDetected() && PlayerRigidBody.linearVelocityY < 0)
             {
-                PlayerRigidBody.linearVelocityY *= FastWallSlideFriction;
+                PlayerRigidBody.linearVelocityY *= fastWallSlideFriction;
                 // CanDoubleJump = false;
             }
         }

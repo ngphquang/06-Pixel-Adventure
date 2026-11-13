@@ -53,12 +53,12 @@ public class Fruit_Manager : MonoBehaviour
         }
         else
         {
-            var RandomFruitsIndex = Random.Range(0, 8);
-            FruitAnimator.SetFloat("Fruits_Index", RandomFruitsIndex);
+            var randomFruitsIndex = Random.Range(0, 8);
+            FruitAnimator.SetFloat("Fruits_Index", randomFruitsIndex);
         }
     }
 
-    void ChooseSpecificFruits()
+    private void ChooseSpecificFruits()
     {
         FruitAnimator.SetFloat("Fruits_Index", Convert.ToInt32(FruitsType));
     }

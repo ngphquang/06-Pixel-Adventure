@@ -10,17 +10,17 @@ namespace Traps
         // ReSharper disable once InvertIf
         private void OnTriggerEnter2D(Collider2D collider)
         {
-            var Player = collider.GetComponent<Player_Controller>();
-            if (Player != null)
+            var player = collider.GetComponent<Player_Controller>();
+            if (player != null)
             {
-                Player.PlayerDie();
+                player.PlayerDie();
                 Game_Manager.GameManagerInstance.RespawnPlayer();
             }
 
-            var Enemies = GetComponent<Enemies_Manager>();
-            if (Enemies != null)
+            var enemies = GetComponent<Enemies_Manager>();
+            if (enemies != null)
             {
-                Enemies.EnemiesDie();
+                enemies.EnemiesDie();
             }
         }
     }

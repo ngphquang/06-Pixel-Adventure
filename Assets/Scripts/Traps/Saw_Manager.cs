@@ -40,13 +40,13 @@ namespace Traps
 
         private void CheckWaypointsArray()
         {
-            var WaypointsList = new List<Saw_Waypoints>(GetComponentsInChildren<Saw_Waypoints>());
-            if (WaypointsList.Count != WaypointsArray.Length)
+            var waypointsList = new List<Saw_Waypoints>(GetComponentsInChildren<Saw_Waypoints>());
+            if (waypointsList.Count != WaypointsArray.Length)
             {
-                WaypointsArray = new Transform[WaypointsList.Count];
-                for (var i = 0; i < WaypointsList.Count; i++)
+                WaypointsArray = new Transform[waypointsList.Count];
+                for (var i = 0; i < waypointsList.Count; i++)
                 {
-                    WaypointsArray[i] = WaypointsList[i].transform;
+                    WaypointsArray[i] = waypointsList[i].transform;
                 }
             }
         }

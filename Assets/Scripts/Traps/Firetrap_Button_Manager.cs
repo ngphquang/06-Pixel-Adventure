@@ -16,8 +16,8 @@ namespace Traps
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            var Player = other.GetComponent<Player_Controller>();
-            if (Player == null) return;
+            var player = other.GetComponent<Player_Controller>();
+            if (player == null) return;
             FiretrapButtonAnimator.SetTrigger("IsActive");
             Firetrap.SwitchOffFire();
         }

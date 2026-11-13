@@ -56,11 +56,11 @@ namespace Enemies
 
         private void ShootBullet()
         {
-            var Bullets = Instantiate(BulletsArray[Random.Range(0, BulletsArray.Length)],
+            var bullets = Instantiate(BulletsArray[Random.Range(0, BulletsArray.Length)],
                 BulletsShooter.position, Quaternion.identity);
-            Bullets.BulletFlip(transform.localScale.x);
-            Bullets.BulletsFly(Mathf.Sign(transform.localScale.x));
-            Bullets.DestroyBullets(BulletsLiveTime);
+            bullets.BulletFlip(transform.localScale.x);
+            bullets.BulletsFly(Mathf.Sign(transform.localScale.x));
+            bullets.DestroyBullets(BulletsLiveTime);
         }
     }
 }

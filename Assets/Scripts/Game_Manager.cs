@@ -1,6 +1,8 @@
 using System.Collections;
 using Players;
+using Unity.VectorGraphics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Game_Manager : MonoBehaviour
 {
@@ -34,8 +36,8 @@ public class Game_Manager : MonoBehaviour
 
     private void CollectFruitsInfo()
     {
-        Fruit_Manager[] AllFruitsOnThisLevel = FindObjectsByType<Fruit_Manager>();
-        TotalFruitsAmount = AllFruitsOnThisLevel.Length;
+        var allFruitsOnThisLevel = FindObjectsByType<Fruit_Manager>();
+        TotalFruitsAmount = allFruitsOnThisLevel.Length;
         print("Total fruits amount: " + TotalFruitsAmount);
     }
 
@@ -82,5 +84,10 @@ public class Game_Manager : MonoBehaviour
         var position = target.position;
         yield return new WaitForSeconds(delay);
         if (!prefab.Equals(null)) Instantiate(prefab, position, Quaternion.identity);
+    }
+
+    public void LoadTheEndScene()
+    {
+        SceneManager.LoadScene("End Scene");
     }
 }

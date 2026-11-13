@@ -43,7 +43,7 @@ namespace Background
                 MeshRenderer = GetComponent<MeshRenderer>();
             }
 
-            MeshRenderer.material.mainTexture = Texture2D[Convert.ToInt32(BackgroundType)];
+            MeshRenderer.sharedMaterial.mainTexture = Texture2D[Convert.ToInt32(BackgroundType)];
         }
     }
 }

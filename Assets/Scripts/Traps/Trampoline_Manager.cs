@@ -18,10 +18,10 @@ namespace Traps
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            var Player = other.GetComponent<Player_Controller>();
-            if (Player == null) return;
+            var player = other.GetComponent<Player_Controller>();
+            if (player == null) return;
 
-            Player.PushPlayer(transform.up * PushForce, DisableControlTimer);
+            player.PushPlayer(transform.up * PushForce, DisableControlTimer);
             TrampolineAnimator = GetComponent<Animator>();
             TrampolineAnimator.SetTrigger("IsActive");
         }

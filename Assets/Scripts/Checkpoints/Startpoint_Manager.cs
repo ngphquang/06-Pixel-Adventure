@@ -9,8 +9,8 @@ namespace Checkpoints
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            var Player = other.GetComponent<Player_Controller>();
-            if (Player == null) return;
+            var player = other.GetComponent<Player_Controller>();
+            if (player == null) return;
             StartpointAnimator = GetComponent<Animator>();
             StartpointAnimator.SetTrigger("IsActive");
         }

@@ -9,8 +9,8 @@ namespace Traps
 
         private void Start()
         {
-            var PushVector = new Vector2(PushForce, 0);
-            SpikedRigidBody.AddForce(PushVector, ForceMode2D.Impulse);
+            var pushVector = new Vector2(PushForce, 0);
+            SpikedRigidBody.AddForce(pushVector, ForceMode2D.Impulse);
         }
     }
 }

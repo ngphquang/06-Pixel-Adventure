@@ -46,8 +46,8 @@ namespace Traps
 
         private void RandomActivatePlatform()
         {
-            var RandomDelay = RandomStart ? Random.Range(0, RandomRange) : 0f;
-            Invoke(nameof(ActivatePlatform), RandomDelay);
+            var randomDelay = RandomStart ? Random.Range(0, RandomRange) : 0f;
+            Invoke(nameof(ActivatePlatform), randomDelay);
         }
 
         private void ActivatePlatform()
@@ -55,11 +55,12 @@ namespace Traps
             CanMove = true;
         }
 
+        // ReSharper disable once InvertIf
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (Impacted) return;
-            var Player = other.GetComponent<Player_Controller>();
-            if (Player != null)
+            var player = other.GetComponent<Player_Controller>();
+            if (player != null)
             {
                 StartCoroutine(FallPlatform());
                 ImpactTimer = ImpactDuration;
@@ -99,6 +100,7 @@ namespace Traps
             Waypoints[1] = transform.position - new Vector3(0, yOffset, 0);
         }
 
+        // ReSharper disable once InvertIf
         private void MovePlatform()
         {
             if (!CanMove) return;

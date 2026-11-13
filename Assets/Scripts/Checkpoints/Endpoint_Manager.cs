@@ -10,12 +10,13 @@ namespace Checkpoints
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            var Player = other.GetComponent<Player_Controller>();
-            if (Player == null || IsActive) return;
+            var player = other.GetComponent<Player_Controller>();
+            if (player == null || IsActive) return;
+
             EndpointAnimator = GetComponent<Animator>();
             EndpointAnimator.SetTrigger("IsActive");
+            Game_Manager.GameManagerInstance.LoadTheEndScene();
             IsActive = true;
-            print("Win");
         }
     }
 }

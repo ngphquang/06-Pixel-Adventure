@@ -12,8 +12,8 @@ namespace Checkpoints
         {
             if (IsActive && !Game_Manager.GameManagerInstance.CheckpointsCanBeReactivated) return;
 
-            var Player = other.GetComponent<Player_Controller>();
-            if (Player == null) return;
+            var player = other.GetComponent<Player_Controller>();
+            if (player == null) return;
             CheckpointAnimator = GetComponent<Animator>();
             ActivateCheckpoint();
         }

@@ -28,10 +28,10 @@ namespace Enemies
         private void FollowPlayer()
         {
             if (!CanMove) return;
-            var PlayerX = Player.transform.position.x;
-            var PlayerIsBehind = PlayerX < transform.position.x && FacingRight ||
-                                 PlayerX > transform.position.x && !FacingRight;
-            if (!PlayerIsBehind || !CanFlip) return;
+            var playerX = Player.transform.position.x;
+            var playerIsBehind = playerX < transform.position.x && FacingRight ||
+                                 playerX > transform.position.x && !FacingRight;
+            if (!playerIsBehind || !CanFlip) return;
             CanFlip = false;
             Invoke(nameof(FlipSprite), FollowFlipDelay);
         }

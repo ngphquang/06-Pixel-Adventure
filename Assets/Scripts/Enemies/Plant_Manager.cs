@@ -45,10 +45,10 @@ namespace Enemies
 
         private void ShootBullet()
         {
-            var Bullets = Instantiate(BulletsArray[Random.Range(0, BulletsArray.Length)],
+            var bullets = Instantiate(BulletsArray[Random.Range(0, BulletsArray.Length)],
                 BulletsShooter.position, Quaternion.identity);
-            Bullets.BulletsFly(ShootDirection);
-            Bullets.DestroyBullets(BulletsLiveTime);
+            bullets.BulletsFly(ShootDirection);
+            bullets.DestroyBullets(BulletsLiveTime);
         }
     }
 }
