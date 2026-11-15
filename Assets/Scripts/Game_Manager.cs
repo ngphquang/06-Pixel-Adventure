@@ -1,5 +1,6 @@
 using System.Collections;
 using Players;
+using UI;
 using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -86,8 +87,13 @@ public class Game_Manager : MonoBehaviour
         if (!prefab.Equals(null)) Instantiate(prefab, position, Quaternion.identity);
     }
 
-    public void LoadTheEndScene()
+    private void LoadTheEndScene()
     {
         SceneManager.LoadScene("End Scene");
+    }
+
+    public void LevelFinished()
+    {
+        UI_In_Game_Manager.Instance.FadeEffectManager.ScreenFadeEffect(1, 1f, LoadTheEndScene);
     }
 }

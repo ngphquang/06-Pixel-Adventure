@@ -15,7 +15,7 @@ namespace Checkpoints
 
             EndpointAnimator = GetComponent<Animator>();
             EndpointAnimator.SetTrigger("IsActive");
-            Game_Manager.GameManagerInstance.LoadTheEndScene();
+            Game_Manager.GameManagerInstance.LevelFinished();
             IsActive = true;
         }
     }
