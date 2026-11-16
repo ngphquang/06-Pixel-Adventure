@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +8,14 @@ namespace UI
     public class Fade_Effect_Manager : MonoBehaviour
     {
         [SerializeField] private Image FadeImage;
+
+        private void Awake()
+        {
+            if (FadeImage != null && FadeImage.color.a == 0f)
+            {
+                FadeImage.color = new Color(FadeImage.color.r, FadeImage.color.g, FadeImage.color.b, 1f);
+            }
+        }
 
         public void ScreenFadeEffect(float targetAlpha, float duration, System.Action onComplete = null)
         {

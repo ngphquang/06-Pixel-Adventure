@@ -8,6 +8,7 @@ namespace UI
     {
         public string SceneName;
         private Fade_Effect_Manager FadeEffectManager;
+        [SerializeField] private GameObject[] UIElements;
 
         private void Awake()
         {
@@ -17,6 +18,16 @@ namespace UI
         private void Start()
         {
             FadeEffectManager.ScreenFadeEffect(0, 1f);
+        }
+
+        public void SwitchUI(GameObject uiEnable)
+        {
+            foreach (var elements in UIElements)
+            {
+                elements.SetActive(false);
+            }
+
+            uiEnable.SetActive(true);
         }
 
         public void NewGame()
