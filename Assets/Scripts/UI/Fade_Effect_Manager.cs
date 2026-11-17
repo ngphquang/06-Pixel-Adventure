@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +18,7 @@ namespace UI
 
         public void ScreenFadeEffect(float targetAlpha, float duration, System.Action onComplete = null)
         {
+            if (FadeImage is null) return;
             StartCoroutine(Fade(targetAlpha, duration, onComplete));
         }
 

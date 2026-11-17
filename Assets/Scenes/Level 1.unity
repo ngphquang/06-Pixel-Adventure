@@ -10517,23 +10517,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9cf2a43ab2c4e0b4381d9061ba300100, type: 3}
---- !u!1 &1000823815 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2599366278542254365, guid: e0c1e80c839445f4181de6c55082f18a, type: 3}
-  m_PrefabInstance: {fileID: 8973698313190797026}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1000823817
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000823815}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 005b7d605354ff04caf26978d753f3b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Saw_Waypoints
 --- !u!1 &1054317477
 GameObject:
   m_ObjectHideFlags: 0
@@ -16441,10 +16424,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1884848640589479296, guid: 9dd639f26fd769c48bf1c9a80917657e, type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2643804765234811290, guid: 9dd639f26fd769c48bf1c9a80917657e, type: 3}
       propertyPath: m_Name
       value: Fade Image
@@ -16502,23 +16481,6 @@ Transform:
   - {fileID: 551155757}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1598801537 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5007253912768896034, guid: e0c1e80c839445f4181de6c55082f18a, type: 3}
-  m_PrefabInstance: {fileID: 8973698313190797026}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1598801539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1598801537}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 005b7d605354ff04caf26978d753f3b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Saw_Waypoints
 --- !u!1 &1746547419
 GameObject:
   m_ObjectHideFlags: 0
@@ -16565,23 +16527,6 @@ Transform:
   - {fileID: 344121553}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1762203784 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3272281311297799232, guid: e0c1e80c839445f4181de6c55082f18a, type: 3}
-  m_PrefabInstance: {fileID: 8973698313190797026}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1762203786
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1762203784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 005b7d605354ff04caf26978d753f3b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Saw_Waypoints
 --- !u!1 &1790991341
 GameObject:
   m_ObjectHideFlags: 0
@@ -17709,16 +17654,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5007253912768896034, guid: e0c1e80c839445f4181de6c55082f18a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1598801539}
-    - targetCorrespondingSourceObject: {fileID: 3272281311297799232, guid: e0c1e80c839445f4181de6c55082f18a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1762203786}
-    - targetCorrespondingSourceObject: {fileID: 2599366278542254365, guid: e0c1e80c839445f4181de6c55082f18a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1000823817}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0c1e80c839445f4181de6c55082f18a, type: 3}
 --- !u!4 &9079146743749955133 stripped
 Transform:

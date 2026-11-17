@@ -321,3 +321,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   DeadVFX: {fileID: 8331947832284536541, guid: 49d7bae7bad81c84dad1feb280b75fa3, type: 3}
+  AnimatorOverrideControllersArray:
+  - {fileID: 22100000, guid: 786f8ecbaef8b3d4986e952ed558022e, type: 2}
+  - {fileID: 22100000, guid: 087f55d61bded6b42b1c1bbb4ae1b3ce, type: 2}
+  - {fileID: 22100000, guid: 38938e24f830b4049806ccf00a05c2bb, type: 2}
+  - {fileID: 22100000, guid: d0033965706d994459053efdb044f35e, type: 2}
+  SkinID: 0

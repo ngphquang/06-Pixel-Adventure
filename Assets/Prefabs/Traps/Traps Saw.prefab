@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 35699611581439093}
+  - component: {fileID: 3214290983848056941}
   m_Layer: 0
   m_Name: Waypoints 3
   m_TagString: Untagged
@@ -31,6 +32,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9059753783896826427}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3214290983848056941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2599366278542254365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 005b7d605354ff04caf26978d753f3b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Saw_Waypoints
 --- !u!1 &3272281311297799232
 GameObject:
   m_ObjectHideFlags: 0
@@ -40,6 +53,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2761804935414221427}
+  - component: {fileID: 679741367878177510}
   m_Layer: 0
   m_Name: Waypoints 2
   m_TagString: Untagged
@@ -62,6 +76,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9059753783896826427}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &679741367878177510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3272281311297799232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 005b7d605354ff04caf26978d753f3b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Saw_Waypoints
 --- !u!1 &5007253912768896034
 GameObject:
   m_ObjectHideFlags: 0
@@ -71,6 +97,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2872603305191460443}
+  - component: {fileID: 3496447699411785350}
   m_Layer: 0
   m_Name: Waypoints 1
   m_TagString: Untagged
@@ -93,6 +120,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9059753783896826427}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3496447699411785350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5007253912768896034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 005b7d605354ff04caf26978d753f3b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Saw_Waypoints
 --- !u!1 &5933447617103107507
 GameObject:
   m_ObjectHideFlags: 0
@@ -262,6 +301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1cf989040a3f964f9adf767819b0055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Damage_Trigger
+  IsEnemy: 0
 --- !u!114 &4981559066503409515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -276,7 +316,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   SawMoveSpeed: 3
   SawCoolDown: 0
-  Waypoints:
-  - {fileID: 2872603305191460443}
-  - {fileID: 2761804935414221427}
-  - {fileID: 35699611581439093}
+  WaypointsArray: []

@@ -48,6 +48,8 @@ namespace Players
         [SerializeField] private LayerMask EnemiesLayer;
 
         [Header("VFX")] [SerializeField] private GameObject DeadVFX;
+        [SerializeField] private AnimatorOverrideController[] AnimatorOverrideControllersArray;
+        [SerializeField] private int SkinID;
 
         private void Awake()
         {
@@ -59,7 +61,7 @@ namespace Players
             PlayerInput.actions.Enable();
         }
 
-        void CheckSingleton()
+        private void CheckSingleton()
         {
             if (PlayerInstance == null) PlayerInstance = this;
             else Destroy(gameObject);
@@ -70,6 +72,7 @@ namespace Players
             IsDead = false;
             DefaultGravityScale = PlayerRigidBody.gravityScale;
             CanControlPLayer(false);
+            UpdateSkin();
         }
 
         private void FixedUpdate()
@@ -341,6 +344,14 @@ namespace Players
             Gizmos.DrawLine(transform.position,
                 new Vector2(transform.position.x + WallCheckDistance, transform.position.y));
             Gizmos.DrawWireSphere(EnemiesCheckPosition.position, EnemiesCheckRadius);
+        }
+
+        public void UpdateSkin()
+        {
+            var skinManager = Skin_Manager.Instance;
+            if (skinManager == null) return;
+
+            PlayerAnimator.runtimeAnimatorController = AnimatorOverrideControllersArray[skinManager.ChosenSkinIndex];
         }
     }
 }
