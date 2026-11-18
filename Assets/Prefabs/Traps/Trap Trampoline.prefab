@@ -175,5 +175,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 207e98a5a20686e4fa49fb1daf5b2d0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Trampoline_Manager
-  PushForce: 50
+  PushForce: 40
   DisableControlTimer: 0.1

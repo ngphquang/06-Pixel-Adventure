@@ -346,12 +346,12 @@ namespace Players
             Gizmos.DrawWireSphere(EnemiesCheckPosition.position, EnemiesCheckRadius);
         }
 
-        public void UpdateSkin()
+        private void UpdateSkin()
         {
             var skinManager = Skin_Manager.Instance;
             if (skinManager == null) return;
 
-            PlayerAnimator.runtimeAnimatorController = AnimatorOverrideControllersArray[skinManager.ChosenSkinIndex];
+            PlayerAnimator.runtimeAnimatorController = AnimatorOverrideControllersArray[skinManager.GetSkinIndex()];
         }
     }
 }

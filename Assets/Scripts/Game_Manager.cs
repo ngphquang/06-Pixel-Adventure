@@ -7,6 +7,9 @@ using UnityEngine.SceneManagement;
 
 public class Game_Manager : MonoBehaviour
 {
+    [Header("Levels Manager")] [SerializeField]
+    private int CurrentLevelIndex;
+
     public static Game_Manager GameManagerInstance;
     [Header("Player")] [SerializeField] public GameObject MainPlayer;
     [SerializeField] public Player_Controller Player;
@@ -33,6 +36,7 @@ public class Game_Manager : MonoBehaviour
     private void Start()
     {
         CollectFruitsInfo();
+        CurrentLevelIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
     private void CollectFruitsInfo()
@@ -92,8 +96,24 @@ public class Game_Manager : MonoBehaviour
         SceneManager.LoadScene("End Scene");
     }
 
+    private void LoadTheNextLevel()
+    {
+        SceneManager.LoadScene(CurrentLevelIndex + 1);
+    }
+
     public void LevelFinished()
     {
-        UI_In_Game_Manager.Instance.FadeEffectManager.ScreenFadeEffect(1, 1f, LoadTheEndScene);
+        var noMoreLevel = CurrentLevelIndex + 2 == SceneManager.sceneCountInBuildSettings;
+        //+2 because we don't count the Main Menu and the End Scene
+
+        if (noMoreLevel)
+        {
+            LoadTheEndScene();
+            print("End Level");
+        }
+        else
+        {
+            UI_In_Game_Manager.Instance.FadeEffectManager.ScreenFadeEffect(1, 1f, LoadTheNextLevel);
+        }
     }
 }

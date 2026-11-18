@@ -6,7 +6,7 @@ namespace Players
     public class Skin_Manager : MonoBehaviour
     {
         public static Skin_Manager Instance;
-        public int ChosenSkinIndex;
+        private int ChosenSkinIndex;
 
         private void Awake()
         {
