@@ -1,7 +1,6 @@
 using System.Collections;
 using Players;
 using UI;
-using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +8,8 @@ public class Game_Manager : MonoBehaviour
 {
     [Header("Levels Manager")] [SerializeField]
     private int CurrentLevelIndex;
+
+    private int NextLevelIndex;
 
     public static Game_Manager GameManagerInstance;
     [Header("Player")] [SerializeField] public GameObject MainPlayer;
@@ -37,6 +38,7 @@ public class Game_Manager : MonoBehaviour
     {
         CollectFruitsInfo();
         CurrentLevelIndex = SceneManager.GetActiveScene().buildIndex;
+        NextLevelIndex = CurrentLevelIndex + 1;
     }
 
     private void CollectFruitsInfo()
@@ -91,29 +93,46 @@ public class Game_Manager : MonoBehaviour
         if (!prefab.Equals(null)) Instantiate(prefab, position, Quaternion.identity);
     }
 
-    private void LoadTheEndScene()
+    private static void LoadTheEndScene()
     {
         SceneManager.LoadScene("End Scene");
     }
 
     private void LoadTheNextLevel()
     {
-        SceneManager.LoadScene(CurrentLevelIndex + 1);
+        SceneManager.LoadScene(NextLevelIndex);
     }
 
     public void LevelFinished()
     {
-        var noMoreLevel = CurrentLevelIndex + 2 == SceneManager.sceneCountInBuildSettings;
-        //+2 because we don't count the Main Menu and the End Scene
+        SaveLevelProgression();
+        LoadNextScene();
+    }
 
-        if (noMoreLevel)
+    private void SaveLevelProgression()
+    {
+        PlayerPrefs.SetInt($"NextLevelIndex {NextLevelIndex} Unlocked", 1);
+        if (!NoMoreLevel())
+        {
+            PlayerPrefs.SetInt("ContinueLevelIndex", NextLevelIndex);
+        }
+    }
+
+    private void LoadNextScene()
+    {
+        if (NoMoreLevel())
         {
             LoadTheEndScene();
-            print("End Level");
         }
         else
         {
             UI_In_Game_Manager.Instance.FadeEffectManager.ScreenFadeEffect(1, 1f, LoadTheNextLevel);
         }
+    }
+
+    private bool NoMoreLevel()
+    {
+        return CurrentLevelIndex + 2 == SceneManager.sceneCountInBuildSettings;
+        //+2 because we don't count the Main Menu and the End Scene
     }
 }
