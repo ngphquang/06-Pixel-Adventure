@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Players;
 using UI;
@@ -6,9 +7,12 @@ using UnityEngine.SceneManagement;
 
 public class Game_Manager : MonoBehaviour
 {
+    private UI_In_Game_Manager UIInGameManager;
+
     [Header("Levels Manager")] [SerializeField]
     private int CurrentLevelIndex;
 
+    [SerializeField] private float LevelTimer;
     private int NextLevelIndex;
 
     public static Game_Manager GameManagerInstance;
@@ -36,21 +40,29 @@ public class Game_Manager : MonoBehaviour
 
     private void Start()
     {
-        CollectFruitsInfo();
         CurrentLevelIndex = SceneManager.GetActiveScene().buildIndex;
         NextLevelIndex = CurrentLevelIndex + 1;
+        UIInGameManager = UI_In_Game_Manager.Instance;
+        CollectFruitsInfo();
+    }
+
+    private void Update()
+    {
+        LevelTimer += Time.deltaTime;
+        UIInGameManager.UpdateTimerUI(LevelTimer);
     }
 
     private void CollectFruitsInfo()
     {
         var allFruitsOnThisLevel = FindObjectsByType<Fruit_Manager>();
         TotalFruitsAmount = allFruitsOnThisLevel.Length;
-        print("Total fruits amount: " + TotalFruitsAmount);
+        UIInGameManager.UpdateFruitsUI(FruitsCollected, TotalFruitsAmount);
     }
 
     public void AddFruits()
     {
         FruitsCollected++;
+        UIInGameManager.UpdateFruitsUI(FruitsCollected, TotalFruitsAmount);
     }
 
     public int GetFruitsCollected()
@@ -126,7 +138,7 @@ public class Game_Manager : MonoBehaviour
         }
         else
         {
-            UI_In_Game_Manager.Instance.FadeEffectManager.ScreenFadeEffect(1, 1f, LoadTheNextLevel);
+            UIInGameManager.FadeEffectManager.ScreenFadeEffect(1, 1f, LoadTheNextLevel);
         }
     }
 
